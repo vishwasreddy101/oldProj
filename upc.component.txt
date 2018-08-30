@@ -1,0 +1,2427 @@
+import {Component, OnInit, ViewChild, ElementRef, HostListener,Input} from "@angular/core";
+import { Http,Headers, RequestOptions,URLSearchParams,ResponseContentType } from "@angular/http";
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from "@angular/forms";
+import { AfterContentInit } from '@angular/core';
+import {Injectable, ChangeDetectorRef } from '@angular/core';
+import { ValidationService } from '../common/carsda_validation.service';
+import { PaginationService } from '../common/carsda_pagination/pagination.service';
+import  'rxjs/add/operator/timeout';
+import { Upc_model } from './upc_model';
+import {Upc_Pagination_model } from '../common/carsda_pagination/pagination.model';
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/map';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription'; 
+import { CarsUploadService } from '../common/carsUpload.service';
+//import { ExceptionComponent } from './constants/upc_constant';
+
+import { environment } from '../../environments/environment';
+
+@Component({
+    selector: 'upc',
+    templateUrl: './upc.component.html',
+    providers: [ValidationService, PaginationService,CarsUploadService]
+})
+
+export class UpcComponent implements OnInit {    
+
+    @ViewChild('pasteAll') pasteAll: ElementRef;
+    @HostListener('scroll', ['$event'])
+    onElementScroll() {
+        document.getElementById('table-container3').scrollTop = document.getElementById('table-container4').scrollTop;
+        document.getElementById('table-container2').scrollLeft = document.getElementById('table-container4').scrollLeft;
+        
+    }
+    onElementScrollHorizental($event) {
+        document.getElementById('table-container4').scrollTop = document.getElementById('table-container3').scrollTop;
+        document.getElementById('table-container1').scrollLeft = document.getElementById('table-container3').scrollLeft;
+    }
+    
+    highlightRowColumns: Object = {};
+    selectedcategory: string
+    showDropDown = true;
+    displayddl: string;
+    displayddl1 = "none";
+    displayddl2 = "none";
+    showtable: string = "none";
+    showDropDown1 = false;
+//    displayddl1: string;
+//    displayddl2: string;
+    showDropDown2 = false;
+    data: any[] = [];
+    showEditable: boolean = false;
+    editRowId: any;
+    ko_Status = "Y";
+    expandedIndex: number = -1;
+    expandedIndex1: number;
+    pageHide: boolean = true;
+    firstPage: boolean = true;
+    searchval: string = "Advanced Search";
+    disableButton: boolean = true;
+    errormsg: string;
+    isSelected: boolean=false;
+    if_edited: boolean = false;
+    if_notPresent: boolean = false;
+    totalItems: number = 50;
+    currentPage: number = 1;
+    pageSize: number = 50;
+    totalPages: number = 5;
+    startPage: number = 1;
+    endPage: number = 0;
+    startIndex: number = 1;
+    endIndex: number = 49;
+    selectPopupCheckboxCount:any;
+    localPopupCheckboxCount:any;
+    newlist: any = [];
+    ui_loader: boolean;
+    savelist: any = [];
+    SavePaste: any;
+    TotalList: any = [];
+    uploadArray: any = [];
+    pastedData: any;
+    selectedData: any;
+    copiedData: any=null;
+    copiedDataPasteAll: Object;
+    currentCopyIndex: number = 0;
+    colortest: any = [];
+    searchModel: any;
+    selectedPasteRowValues: any = [];
+    done = 0;
+    copycount = 0;
+    attrbuttonhide: boolean;
+    copyEvent: string;
+    Event_Trigger: boolean;
+    iterateValues: number;
+    pasteAllCondition: boolean;
+    pasteCondition: boolean=false;
+    paste_All_AttributeList: any = [];
+    upload_AttributeList: any = [];
+    pasteAttributeList: any = [];
+    selectedRow: Number = null;
+   // setClickedRow: Function;
+    rows_data: any=null;
+    isLocalSelected:boolean;
+    indexIncrease:number=0;
+    indexUpdateIncrease:number=0;
+    massUploadResponse:any;
+    upcFileData;
+    uploadUrl;
+    filename:string;
+    modifiedRowsData: any = [];
+    MassUploadList:any=[];
+    upcItemList:any=[];
+    updatedRowsTableData: any = [];
+    errors:any=[];
+    checkboxcount:any;
+    retailname:any;
+    uploadCondition:boolean=false;    
+    UpcLocalAttributeData = [];
+    localattrcheck:boolean=false;
+    //MAss Upload variables -- start
+    uploadResponse = {successCount: 0, failedRowsCount: 0, errors: []};
+    private carsUploadService: CarsUploadService;
+    uploadSubscription: Subscription;
+    placeHolder: string = "-";
+    errorinDB :boolean;
+    errorinValue :boolean;
+    ignoreList: any = [];
+    successList: any = [];
+    copyResponseChildData:any=[];
+    tableCheckboxCount:any=0;
+    parentid:any;
+    uploadSub:Subscription;
+    ignoreCount : number = 0;
+    successCount: number = 0;
+    //Mass Upload Variables declaration -- end
+    selectall_LocalChanges:any; 
+    selectall_LocalChanges1:any=[];
+    selectallClicked:boolean;
+    myDate:any;
+    tableData: any = [];
+    tablecheckbox: any;
+    tableheadercheckbox: boolean;
+    localallcheck: any;
+    selectallcheck: any;
+    savecancelDisabled: boolean;
+    isSelectedFlag: boolean; 
+    copyResponseData: any;
+    isPasteAllActive: boolean;
+    retails: any = [];
+    showalert: string;
+    countrycode: any;
+    retailerFlag: boolean=false;
+
+    
+    openIndex: number;
+    editListrow: any = [];
+    editListrow0 :any;
+    editListrow1 :any;
+    editListrow2 :any;
+    editListrow3 :any;
+    editListrow4 :any;
+    editListrow5 :any;
+    editListrow6 :any;
+    editListrow7 :any;
+    editListrow8 :any;
+    editListrow9 :any;
+    editListrow10 :any;
+    editListrow11 :any;
+    editListrow12 :any;
+    editListrow13 :any;
+    editListrow14 :any;
+    editListrow15 :any;
+    editListrow16 :any;
+    
+    editListrow52 :any;
+    editListrow53 :any;
+    editListrow54 :any;
+    editListrow55 :any;
+    editListrow56 :any;
+    editListrow57 :any;
+    editListrow58 :any;
+    editListrow59 :any;
+    editListrow60 :any;
+    editListrow61 :any;
+    editListrow62 :any;
+    editListrow63 :any;
+    editListrow64 :any;
+    editListrow65 :any;
+    editListrow66 :any;
+    editListrow67 :any;
+    editListrow68 :any;
+    editListrow69 :any;
+    editListrow70 :any;
+    editListrow71 :any;
+    editListrow72 :any;
+    
+    KO_user_data: any ;
+    
+    editRowvaluesResponse: any;
+    formData: any = "";
+    model: any;
+    koStatus: any;
+    
+    vend_nbr  :any;
+    upc  :any;
+    item_nbr  :any;
+    item_desc_1  :any;
+    item_desc_2  :any;
+    size_desc  :any;
+    vnpk_qty  :any;
+    wm_acting_deptnum  :any;
+    fineline_num  :any;
+    sku_desc  :any;
+    package_group  :any;
+    category  :any;
+    sub_category  :any;
+    brand  :any;
+    flavor  :any;
+    unit_size  :any;
+    retailpack_quantity  :any;
+    package_material  :any;
+    supplier  :any;
+    ic_fc  :any;
+    calorie_content  :any;
+    unitcase_conv  :any;
+    ltr  :any;
+    koButtonHide:boolean;
+    
+    localAttribute9   :any;
+    localAttribute10  :any;
+    localAttribute11  :any;
+    localAttribute12  :any;
+    localAttribute13  :any;
+    localAttribute14  :any;
+    localAttribute15  :any;
+    localAttribute16  :any;
+    localAttribute17  :any;
+    localAttribute18  :any;
+    localAttribute19  :any;
+    localAttribute20  :any;
+    localAttribute21  :any;
+    localAttribute22  :any;
+    localAttribute23  :any;
+    localAttribute24  :any;
+    localAttribute25  :any;
+    localAttribute26  :any;
+    localAttribute27  :any;
+    localAttribute28  :any;
+    localAttribute29  :any;
+    localAttribute30  :any;
+
+    tempRetails:any=null;
+    selectedexport: any=0;
+    localStorageValue: any;
+    selectedicfc: any = "";
+    ExpandChildArray:any=[];
+    
+    @ViewChild('uploadFile')
+    uploadFileSelector: any;
+    
+    selectedChildRow: number;
+    
+    uploadresponse:any;
+    localAttributeSearchData: any;
+    
+    varriedLocalTablewidth : number = 1832;
+    varriedLocalTablewidthLocal: number = 1850;
+    ctryCd: any;
+    retId: any;
+    ko_item: any;
+    y: any;
+    vmp:string;
+    localcheckboxPresent:boolean=false;
+    
+    urlName = environment.url;
+    
+    isCollapsed = false;
+    responseCode: string ="";
+    resultMessage: string ="";
+    isFindClicked: boolean = false;
+    oldCountryValueLocal: any ;
+    //Variables declaration -- end
+    
+    mainForm: FormGroup
+    
+    constructor(public http: Http, public formBuilder: FormBuilder, carsUploadService: CarsUploadService) {
+       this.carsUploadService = carsUploadService;
+       
+       this.mainForm = this.formBuilder.group({           
+           'retId': new FormControl('', Validators.required),
+           'ctryCd': new FormControl('', Validators.required),
+           'vend_nbr': ['', [ValidationService.textnumberValidator, ValidationService.textmsgValidator, Validators.maxLength(79)]],
+           'upc': ['', [ValidationService.textnumberValidator, ValidationService.textmsgValidator, Validators.maxLength(254)]],
+           'item_nbr': ['', [ValidationService.textnumberValidator, ValidationService.textmsgValidator, Validators.maxLength(79)]],
+           'item_desc_1': ['', Validators.maxLength(100)],
+           'item_desc_2': ['', Validators.maxLength(100)],
+           'size_desc': ['', Validators.maxLength(50)],
+           'vnpk_qty': ['', [ValidationService.textboxncValidator, Validators.maxLength(15)]],
+           'wm_acting_deptnum': ['', [ValidationService.textnumberValidator, ValidationService.textmsgValidator, Validators.maxLength(54)]],
+           'fineline_num': ['', [ValidationService.textnumberValidator, ValidationService.textmsgValidator, Validators.maxLength(54)]],
+           'sku_desc': ['', Validators.maxLength(50)],
+           'package_group': ['', [ValidationService.textmsgValidator, Validators.maxLength(254)]],
+           'category': ['', Validators.maxLength(50)],
+           'sub_category': ['', Validators.maxLength(50)],
+           'brand': ['', [ValidationService.textmsgValidator, Validators.maxLength(254)]],
+           'flavor': ['', Validators.maxLength(50)],
+           'unit_size': ['', Validators.maxLength(50)],
+           'retailpack_quantity': ['', Validators.maxLength(50)],
+           'package_material': ['', Validators.maxLength(50)],
+           'supplier': ['', Validators.maxLength(50)],
+           'ic_fc': ['', Validators.maxLength(50)],
+           'calorie_content': ['', Validators.maxLength(50)],
+           //'unitcase_conv': ['', Validators.maxLength(50)],
+           //'ltr': ['', [ValidationService.textdotValidator, ValidationService.textonedotValidator, Validators.maxLength(50)]],
+           'ko_item': ['Y'],
+           'localAttribute9': ['', Validators.maxLength(50)],
+           'localAttribute10': ['', Validators.maxLength(50)],
+           'localAttribute11': ['', Validators.maxLength(50)],
+           'localAttribute12': ['', Validators.maxLength(50)],
+           'localAttribute13': ['', Validators.maxLength(50)],
+           'localAttribute14': ['', Validators.maxLength(50)],
+           'localAttribute15': ['', [ValidationService.textdotValidator, ValidationService.textonedotValidator, Validators.maxLength(50)]],
+           'localAttribute16': ['', Validators.maxLength(50)],
+           'localAttribute17': ['', Validators.maxLength(50)],
+           'localAttribute18': ['', Validators.maxLength(50)],
+           'localAttribute19': ['', Validators.maxLength(50)],
+           'localAttribute20': ['', Validators.maxLength(50)],
+           'localAttribute21': ['', Validators.maxLength(50)],
+           'localAttribute22': ['', Validators.maxLength(50)],
+           'localAttribute23': ['', Validators.maxLength(50)],
+           'localAttribute24': ['', Validators.maxLength(50)],
+           'localAttribute25': ['', Validators.maxLength(50)],
+           'localAttribute26': ['', Validators.maxLength(50)],
+           'localAttribute27': ['', Validators.maxLength(50)],
+           'localAttribute28': ['', Validators.maxLength(50)],
+           'localAttribute29': ['', Validators.maxLength(50)],
+           'localAttribute30': ['', Validators.maxLength(50)],
+           'pageStartIndex': [1],
+           'pageEndIndex': [50]
+          
+       });
+       //this.mainForm.markAsTouched();
+       console.log("formdata", this.mainForm);
+   }
+   
+    copy_Clicked() {
+    	this.pasteCondition=false;
+        this.ui_loader=true;
+        this.isSelected = true;
+        this.isLocalSelected=true;
+        this.done=0;
+        this.copycount=1;
+        this.copiedData = this.selectedData;
+        this.ui_loader=false;        
+        console.log(this.currentCopyIndex);
+        this.tableData[this.currentCopyIndex].rowCheckbox = false;
+/*        this.pageCheckboxDisabling();
+*/       /*this.selectedPasteRowValues = [];    */
+       }
+
+    paste_Clicked() {
+    	
+    	this.isSelected = false; 
+        this.isLocalSelected=false;
+    }
+
+    paste_All_Clicked() {
+    
+   	this.isSelected = false;
+   	this.isLocalSelected=false;
+    }
+
+    
+    tableHeader_Checkbox_Clicked(tableheadercheckbox){
+    	
+    if(tableheadercheckbox){
+    	for (let i = 0; i < this.tableData.length; i++){
+            this.done++;
+            this.tableData[i].rowCheckbox = true;
+            this.selectedPasteRowValues.push(this.tableData[i]);
+            
+        }
+    }
+    else{
+    	this.tableCheckboxCount=0; 
+        for(let i = 0; i < this.tableData.length; i++){
+    	 for(let j = 0; j < this.selectedPasteRowValues.length; j++){
+    		 
+         if(this.tableData[i].id==this.selectedPasteRowValues[j].id){
+        	 this.done--;
+        	 this.selectedPasteRowValues.splice(j, 1);
+        	 this.tableData[i].rowCheckbox = false;
+         
+          }
+        }
+      }  	 
+    	 console.log(this.selectedPasteRowValues);
+    }
+  }  
+    
+    row_Checkbox_Clicked(index, item){
+    	
+    	console.log("copiedData",this.copiedData);
+            if (item.rowCheckbox) {
+                this.currentCopyIndex = index;
+                this.done++;
+                this.selectedData = item;
+                if(this.copiedData != null)
+                	{
+                        if(item.id != this.copiedData.id){
+                            this.selectedPasteRowValues.push(item);
+                        }
+                	}
+               
+                console.log(this.selectedPasteRowValues);
+            } else {
+                this.done--;
+                this.tableheadercheckbox=false;  
+                for (let i = 0; i < this.selectedPasteRowValues.length; i++) {
+                    if (item.id == this.selectedPasteRowValues[i].id) {
+                        this.selectedPasteRowValues.splice(i, 1);
+                    }
+                }
+                this.tableData[index].rowCheckbox = false;
+                console.log(this.selectedPasteRowValues);
+            }  
+            
+            if(this.selectedPasteRowValues.length==this.tableData.length)
+    		{
+            this.tableheadercheckbox=true;  
+    		}
+         console.log("done",this.done);
+    }
+
+    copyDisabled(){
+
+        if (this.done == 1) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+ 
+    popupCancel(){
+    	
+        this.selectall_LocalChanges1=[];
+        this.selectallcheck=false;
+		this.localallcheck=false;
+		this.isSelected = true;
+       	this.isLocalSelected=true;
+        this.uploadFileSelector.nativeElement.value = "";
+        this.ui_loader=false;
+   	    this.pasteCondition=false;
+    	this.upcFileData={};   
+    	this.pasteAttributeList=[];
+/*    	this.selectedPasteRowValues =[];
+*/    	this.upload_AttributeList=[];
+    	/*this.pageCheckboxDisabling();*/
+    	console.log("pasteAttributeList",this.pasteAttributeList);
+    	console.log("copyData",this.copiedData);
+    	console.log("this.selectedPasteRowValues",this.selectedPasteRowValues)
+    	
+    }
+    
+    uploadCancel(){
+        this.uploadFileSelector.nativeElement.value = "";
+    }
+
+    massuploadcancel(){
+   	       this.isLocalSelected=false;
+
+    }
+    popupUpdateCancel(){
+    	
+        this.selectedPasteRowValues = [];
+        this.upload_AttributeList=[];
+        this.selectallcheck=false;
+ 	    this.localallcheck=false;
+        this.isLocalSelected=true;
+    	this.selectall_LocalChanges1=[];
+    	this.selectPopupCheckboxCount=0;
+    	this.selectall_LocalChanges=0;
+        console.log(this.isSelected);
+        this.massuploadcancel();
+        this.upcFileData={};  
+        
+        this.ui_loader=false;
+        this.uploadFileSelector.nativeElement.value = "";
+/*    	this.paginationSearch('nosave');                   
+*/
+
+    }
+     
+    paste_pasteall_disabled(){
+        if (this.done > 0 && this.copycount == 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    pasteall_disabled(){
+    	 if (this.copycount == 1 && this.done == 0){
+             return false;
+         } else {
+             return true;
+         }
+    }
+
+    tableheaderdisable(){
+    	
+    	 if (this.copycount == 1){
+             return false;
+         } else {
+             return true;
+         }
+    	
+    }
+   
+   
+ default_Attributes(){
+    	
+     
+        this.done = 0;
+        this.copycount = 0;
+        this.isSelected = false;
+        this.tableheadercheckbox = false;
+        this.Event_Trigger = true;
+        this.savecancelDisabled = false;
+        this.selectallcheck=false;
+		this.localallcheck=false;
+		this.isSelectedFlag=false;
+		this.pasteAttributeList = [];
+        this.isLocalSelected=false;
+        this.ExpandChildArray=[];
+        this.tableheadercheckbox=false;
+        this.pageCheckboxDisabling();
+//		this.paste_All_AttributeList=[];
+		//this.upload_AttributeList=[];
+/*		this.copiedData=null;
+*/		this.selectedPasteRowValues = [];
+   }
+    
+    PastePopUpDisable(){
+	  if(this.pasteAttributeList.length>0){
+		  return false;
+	    }
+	 else{
+		  return true;
+		}
+    }
+
+    PasteAllPopUpDisable(){
+	  if(this.paste_All_AttributeList.length>0){
+		  return false;
+	    }
+	 else{
+		  return true;
+		}
+    }
+    
+	MassUploadPopUpDisable(){
+	  if(this.upload_AttributeList.length>0){
+		  return false;
+	    }
+	 else{
+		  return true;
+		}
+    }
+	
+    
+    selectALL_Checkbox(attrname,selectevent){
+    	   	
+    	if(attrname=='pasteSelect'){
+    		var CheckboxID="pasteSelectedID_";
+    		}
+    	else
+    		if(attrname=='pasteAllSelect') {
+    			var CheckboxID="pasteallSelectedID_";
+    		 }
+    	else
+    		if(attrname=='updateSelect'){
+			var CheckboxID="MassUploadSelectedID_";	
+			  }
+    	
+    	this.selectallcheck=selectevent.target.checked;
+    	 	
+      	 if (this.selectallcheck){
+      		this.selectallClicked=false;
+            this.selectPopupCheckboxCount=0;
+            this.selectall_LocalChanges=0;
+      		this.pasteAttributeList=[];
+      		this.paste_All_AttributeList=[];
+              this.upload_AttributeList=[];
+              this.localattrcheck=true;
+      		// Husain: It seems localAttributes 28,29 are not there and then compiled code gives error at runtime..
+      		for(let i=1;i<=30;i++){
+    	    	let selectID=CheckboxID+i;
+    	   		if((<HTMLInputElement>document.getElementById(selectID)) != null) {
+                    this.selectPopupCheckboxCount++;
+                    if(i>=11){
+                    	this.selectall_LocalChanges++;
+                    }
+    	   		 (<HTMLInputElement>document.getElementById(selectID)).checked =false;
+    	   		 document.getElementById(selectID).click();
+    	   		}
+        	}
+     		
+     	 }
+      		else{
+                    this.localattrcheck=false;
+                    this.selectall_LocalChanges=0;
+                    for(let i=1;i<=30;i++){
+        	    	let selectID=CheckboxID+i;
+                       console.log(selectID);
+        	   		if(<HTMLInputElement>document.getElementById(selectID) != null) {
+                     this.selectPopupCheckboxCount--;
+        	   		 document.getElementById(selectID).click();
+        	   		}
+                  }
+                 
+      			}
+      		
+       /*  console.log(this.pasteAttributeList);
+       	 console.log(this.selectall_LocalChanges);*/
+    }
+      
+   localALL_Checkbox(attrname,localevent){
+      
+	   if(attrname=='pasteLocal'){
+		var CheckboxID="pasteSelectedID_";
+		}
+	     else
+		if(attrname=='pasteAllLocal'){
+			var CheckboxID="pasteallSelectedID_";
+		 }
+	      else
+		if(attrname=='updateLocal'){
+		var CheckboxID="MassUploadSelectedID_";	
+		  }
+    	
+    
+    	//this.isSelected=false;
+    	this.localallcheck=localevent.target.checked;
+    	
+      	 if (this.localallcheck) {
+            if(this.localattrcheck){
+                for(let i=1;i<=10;i++){
+                  var selectID=CheckboxID+i;
+                  console.log("local test");
+                     console.log(selectID);  	   		
+                     document.getElementById(selectID).click();
+                         
+              }
+                this.localattrcheck=false;
+            }
+      		this.pasteAttributeList=[];
+      		this.paste_All_AttributeList=[];
+      		this.upload_AttributeList=[];
+      		this.localPopupCheckboxCount=0;
+      		for(let i=11;i<=30;i++){
+    	    	var selectID=CheckboxID+i;
+                   console.log(selectID);  
+                 if(document.getElementById(selectID) != null){
+                        this.localPopupCheckboxCount++;	   		
+    	   		        (<HTMLInputElement>document.getElementById(selectID)).checked =false;
+    	   		        document.getElementById(selectID).click();
+                   }
+        	}
+      		
+     	 }
+      		else
+      			{
+      			for(let i=11;i<=30;i++){
+        	    	let selectID=CheckboxID+i;
+                       console.log(selectID);
+                       if(document.getElementById(selectID) != null){
+                            this.localPopupCheckboxCount--;
+        	   		        document.getElementById(selectID).click();
+                       }
+            	}
+              }
+/*        console.log(this.pasteAttributeList);
+*/    }
+    
+ 
+   
+    update_paste_SelAttrList(attrName, event) {
+       
+    	if (event.target.checked) {
+            this.pasteAttributeList.push(attrName); 
+            if(attrName.indexOf('localAttribute') !== -1){
+            	if(this.selectall_LocalChanges1.indexOf(attrName) == -1){
+            	this.selectall_LocalChanges1.push(attrName);
+            	}
+            }
+            
+        } else {        	
+            let index = this.pasteAttributeList.indexOf(attrName);
+            let index1= this.selectall_LocalChanges1.indexOf(attrName);
+            if (index !== -1) {
+            	
+                this.pasteAttributeList.splice(index, 1);
+            }
+            if (index1 >-1) {
+            	
+                this.selectall_LocalChanges1.splice(index1, 1);
+            }
+        }
+        
+        
+       
+        if(this.selectall_LocalChanges1.length != this.selectall_LocalChanges ){
+        	
+        	this.localallcheck=false;
+        }
+        
+    	if(this.pasteAttributeList.length<this.selectPopupCheckboxCount){
+    		this.selectallcheck=false;
+    		}
+    	else{
+    		if(this.pasteAttributeList.length==this.selectPopupCheckboxCount){
+    		this.selectallcheck=true;
+    		}
+    	}
+    	
+    	
+            if( this.selectall_LocalChanges1.length==0 || this.selectPopupCheckboxCount<=0){
+            this.localallcheck=false;
+            }
+            else{
+    		if(this.selectall_LocalChanges1.length==this.localPopupCheckboxCount || this.pasteAttributeList.length==this.selectPopupCheckboxCount ){
+    			
+		      this.localallcheck=true;
+		      }
+            }
+    		
+/*    	console.log(this.pasteAttributeList);
+*/    	console.log(this.selectPopupCheckboxCount);
+    	console.log(this.localPopupCheckboxCount);
+    	console.log(this.selectall_LocalChanges);
+    	console.log(this.selectall_LocalChanges1.length);
+    	console.log(this.selectall_LocalChanges1);
+    	
+    }
+
+   
+    paste_functionality() {
+    
+    	this.selectall_LocalChanges1=[];
+    	 this.pasteCondition=true;
+        console.log("initial" + this.selectedPasteRowValues.length);
+        if (this.pasteAttributeList.length > 0) {
+
+            for (let k = 0; k < this.pasteAttributeList.length; k++) {
+
+                let attrName = this.pasteAttributeList[k];
+                let attrCd = attrName + "Cd";
+
+                for (let x = 0; x < this.selectedPasteRowValues.length; x++) {
+                    if(this.selectedPasteRowValues[x].exception != true){
+                    if (this.selectedPasteRowValues[x][attrName] != this.copiedData[attrName]) {
+                        this.selectedPasteRowValues[x][attrName] = this.copiedData[attrName];
+                        this.selectedPasteRowValues[x][attrCd] = this.copiedData[attrCd];
+                        this.selectedPasteRowValues[x].updatedValues.push(attrName);
+                        if (this.updatedRowsTableData.length == 0) {
+                            this.updatedRowsTableData.push(this.selectedPasteRowValues[x]);
+                        } else {
+                            var indexinUpdatedRowsTableData = this.updatedRowsTableData.findIndex((tempArray) => {
+                                return tempArray.id == this.selectedPasteRowValues[x].id;
+                            });
+                            if (indexinUpdatedRowsTableData !== -1) {
+                                this.updatedRowsTableData.splice(indexinUpdatedRowsTableData, 1);
+                                this.updatedRowsTableData.push(this.selectedPasteRowValues[x]);
+                            } else {
+                                this.updatedRowsTableData.push(this.selectedPasteRowValues[x]);
+                            }
+                        }
+
+                        var indexintableData = this.tableData.findIndex((tempArray) => {
+                            return tempArray.id == this.selectedPasteRowValues[x].id;
+                        });
+                        if(indexintableData !== -1){
+                        	console.log("this.tableData[indexintableData].exception",this.tableData[indexintableData].exception);
+                        	if(!this.tableData[indexintableData].exception){
+                        	
+                               this.tableData[indexintableData][attrName] = this.copiedData[attrName];
+                               this.tableData[indexintableData][attrCd] = this.copiedData[attrCd];
+                               this.tableData[indexintableData].updatedValues.push(attrName);
+                        	}
+                        if (this.tableData[indexintableData].items !== null) {
+                            for (let j = 0; j < this.tableData[indexintableData].items.length; j++) {
+                            	if(this.tableData[indexintableData].items[j].exception != true){
+                                this.tableData[indexintableData].items[j][attrName] = this.copiedData[attrName];
+                                this.tableData[indexintableData].items[j][attrCd] = this.copiedData[attrCd];
+                                this.tableData[indexintableData].items[j].updatedValues.push(attrName);
+
+                            	}
+                            }
+                        }
+                    }
+                        
+                }
+            }
+          }
+          
+        }
+            this.default_Attributes();
+            console.log("last", this.tableData);
+    }
+  }
+    
+    pageCheckboxDisabling(){
+    	 for (let z = 0; z < this.tableData.length; z++) {
+             this.tableData[z].rowCheckbox = false;
+             if(this.tableData[z].items !=null ){
+                 for(let y=0;y<this.tableData[z].items.length;y++){
+              		this.tableData[z].items[y].rowCheckbox = false;
+                }
+             }
+         }
+    }
+    
+    update_pasteall_SelAttrList(attrName, event) {
+    	
+        if (event.target.checked) {
+            this.paste_All_AttributeList.push(attrName);
+            this.checkboxcount=this.checkboxcount+1;
+            if(attrName.indexOf('localAttribute') !== -1){
+            	if(this.selectall_LocalChanges1.indexOf(attrName) == -1){
+            	this.selectall_LocalChanges1.push(attrName);
+            	}
+            }
+            
+        } else {
+            let index = this.paste_All_AttributeList.indexOf(attrName);
+            let index1= this.selectall_LocalChanges1.indexOf(attrName);
+            this.checkboxcount=this.checkboxcount-1;
+            if (index !== -1) {
+                this.paste_All_AttributeList.splice(index, 1);
+            }
+            if (index1 !== -1) {
+            	
+                this.selectall_LocalChanges1.splice(index1, 1);
+            }
+        }
+        
+        
+        if(this.selectall_LocalChanges1.length != this.selectall_LocalChanges ){
+        	
+        	this.localallcheck=false;
+        }
+        
+    	if(this.paste_All_AttributeList.length<this.selectPopupCheckboxCount){
+		this.selectallcheck=false;
+	    }
+	      else{
+		        if(this.paste_All_AttributeList.length==this.selectPopupCheckboxCount){
+		            this.selectallcheck=true;
+		   }
+	   }
+    	
+        if(this.localPopupCheckboxCount<=0 || this.selectPopupCheckboxCount<=0){
+        this.localallcheck=false;
+        }
+        else{
+        if(this.selectall_LocalChanges1.length==this.localPopupCheckboxCount || this.paste_All_AttributeList.length==this.selectPopupCheckboxCount ){
+            
+          this.localallcheck=true;
+          }
+        }
+        
+    }
+    
+
+    pasteall_functionality() {
+ 	   
+    	this.selectall_LocalChanges1=[];
+        if (this.paste_All_AttributeList.length > 0) {
+            for (let k = 0; k < this.paste_All_AttributeList.length; k++) {
+                let attrName = this.paste_All_AttributeList[k];
+                let attrCd = attrName + "Cd";
+                this.copiedDataPasteAll[attrName] = this.copiedData[attrName];
+                this.copiedDataPasteAll[attrCd] = this.copiedData[attrCd];
+                for (let x = 0; x < this.tableData.length; x++) {
+
+                    if (this.tableData[x][attrName] != this.copiedData[attrName]) {
+                    	if(this.tableData[x].exception != true){
+                        this.tableData[x][attrName] = this.copiedData[attrName];
+                        this.tableData[x][attrCd] = this.copiedData[attrCd];
+        				this.tableData[x].updatedValues.push(this.paste_All_AttributeList[k]);
+                    	}
+                        if (this.tableData[x].items != null) {
+                            for (let j = 0; j < this.tableData[x].items.length; j++) {
+                            	if(this.tableData[x].items[j].exception != true){
+                                this.tableData[x].items[j][attrName] = this.copiedData[attrName];
+                                this.tableData[x].items[j][attrCd] = this.copiedData[attrCd];
+                				this.tableData[x].items[j].updatedValues.push(this.paste_All_AttributeList[k]);
+
+                            	}
+                            }
+                        }
+                    }
+
+                }
+
+            }
+            this.isPasteAllActive = true;
+             console.log(this.tableData);
+        }
+    
+        this.pasteAllCondition = true;
+        this.default_Attributes();
+
+    }
+
+    Update_child_Edit_DropDown(rowID, attrName,tableCategory, newValue) {
+    	this.copyResponseChildData=[];
+    	 if (newValue == undefined) {
+             newValue = "";
+         }
+    	 
+    	 let attrCd = attrName + "Cd";
+         this.rows_data[attrName] = newValue.valueName;
+         this.rows_data[attrCd] = newValue.valueId;
+         this.if_edited = true;   
+       
+    	
+         var parentRowIndex = this.tableData.findIndex((char2) => {
+             return char2.id == this.parentid;
+         });
+         console.log(this.tableData[parentRowIndex].items);
+         var childrowIndex= this.tableData[parentRowIndex].items.findIndex((char2) => {
+             return char2.id == rowID;
+         });
+        
+        
+	
+         if(this.copyResponseData[parentRowIndex].items[childrowIndex][attrName] !== newValue.valueName){
+     		this.tableData[parentRowIndex].items[childrowIndex].updatedValues.push(attrName);
+     	} else {
+     		if(this.tableData[parentRowIndex].items[childrowIndex].updatedValues.indexOf(attrName) !== -1){
+     			this.tableData[parentRowIndex].items[childrowIndex].updatedValues.splice(this.tableData[parentRowIndex].items[childrowIndex].updatedValues.indexOf(attrName));
+     		}
+     		
+     	}
+    } 
+    
+    update_Edit_DropDown(rowID, attrName,newValue) {
+    	this.copyResponseChildData=[];
+        if (newValue == undefined) {
+            newValue = "";
+        }
+        
+        let attrCd = attrName + "Cd";
+        this.rows_data[attrName] = newValue.valueName;
+        this.rows_data[attrCd] = newValue.valueId;
+        this.if_edited = true;        
+   	
+        var indexInCopyResponseData = this.copyResponseData.findIndex((char2) => {
+            return char2.id == rowID;
+        });
+        var indexInTableData = this.tableData.findIndex((char2) => {
+            return char2.id == rowID;
+        });
+        if(this.copyResponseData[indexInCopyResponseData][attrName] !== newValue.valueName){
+    		this.tableData[indexInCopyResponseData].updatedValues.push(attrName);
+    	} else {
+    		if(this.tableData[indexInTableData].updatedValues.indexOf(attrName) !== -1){
+    			this.tableData[indexInTableData].updatedValues.splice(this.tableData[indexInTableData].updatedValues.indexOf(attrName));
+    		}
+    		
+    	}
+    } 
+    
+  
+ /*Code for Mass Upload Begins*/
+    
+    massUpload_SetAttributes(attrName, event) {
+    	
+        if (event.target.checked) {
+            this.upload_AttributeList.push(attrName);
+            this.checkboxcount=this.checkboxcount+1;
+            if(attrName.indexOf('localAttribute') !== -1){
+            	if(this.selectall_LocalChanges1.indexOf(attrName) == -1){
+            	this.selectall_LocalChanges1.push(attrName);
+            	}
+            }
+
+        } else {
+
+            let index = this.upload_AttributeList.indexOf(attrName);
+            let index1= this.selectall_LocalChanges1.indexOf(attrName);
+            this.checkboxcount=this.checkboxcount-1;
+            if (index !== -1) {
+                this.upload_AttributeList.splice(index, 1);
+            }
+           if (index1 !== -1) {
+            	
+                this.selectall_LocalChanges1.splice(index1, 1);
+            }
+        }
+        
+       if(this.selectall_LocalChanges1.length != this.selectall_LocalChanges ){
+        	
+        	this.localallcheck=false;
+        }
+    	if(this.upload_AttributeList.length<this.selectPopupCheckboxCount){
+		     this.selectallcheck=false;
+		}
+	      else{
+		        if(this.upload_AttributeList.length==this.selectPopupCheckboxCount){
+		        this.selectallcheck=true;
+		}
+	}
+        if(this.localPopupCheckboxCount<=0 || this.selectPopupCheckboxCount<=0){
+        this.localallcheck=false;
+        }
+          else{
+                if(this.selectall_LocalChanges1.length==this.localPopupCheckboxCount || this.upload_AttributeList.length==this.selectPopupCheckboxCount ){
+            
+                this.localallcheck=true;
+          }
+        }
+		
+		console.log(this.upload_AttributeList);
+    }
+    
+   
+    
+    ngOnInit(): void {
+    	this.localcheckboxPresent=false;
+        this.ui_loader = true;
+        this.showalert = "none";
+        this.http.get(this.urlName + '/services/countrycode')
+            .subscribe((countrycode) => {
+                this.ui_loader = false;
+                this.countrycode = countrycode.json();
+                console.log(this.countrycode);
+            }, error => {
+                console.log(error.json());
+                this.ui_loader = false;
+                document.getElementById("exceptionerror").click();
+            });
+
+
+        
+        this.http.get(this.urlName + '/services/getUpcUserDetails').subscribe((userDetails) => {
+            console.log("userDetails");
+            let userData: any = userDetails.json();
+            /*this.koButtonHide=;*/
+            console.log(userData);
+            this.koButtonHide=userData.displayNonKoItems;
+                 
+              }, error => {
+                  
+                }); 
+        
+        this.http.get(this.urlName + '/services/retailer')
+            .subscribe((retailVal) => {
+                this.tempRetails=retailVal.json();
+              
+                for(let x of this.tempRetails){
+                	if(x.retId=='-12700'){
+                        this.retailerFlag = true;
+                		 var retIndex = this.tempRetails.indexOf(x);
+                		 if (retIndex != -1) {
+                             this.tempRetails.splice(retIndex, 1);
+                	}
+                }
+              }
+            	this.retails = this.tempRetails;
+                
+                console.log(this.retails);
+            }, error => {
+                console.log(error.json());
+                this.ui_loader = false;
+                document.getElementById("exceptionerror").click();
+            });
+        // Subscribing to MassUpload Response Changes
+           
+        //service call for mass upload
+        this.uploadSubscription = this.carsUploadService.uploadResponseChanged.subscribe(
+                () => {
+                	this.errorinDB=true;
+                	this.errorinValue=true;
+                	let serviceResponse: any = this.carsUploadService.getUploadResponse();
+                	
+                  this.uploadResponse = serviceResponse.message;
+                  console.log('Received Response');
+                  console.log(this.uploadResponse);
+                  //this.upcItemList=this.carsUploadService.getUploadResponse().upcItemDto;
+                  let errors:any = this.uploadResponse.errors; 
+                  this.ignoreList=[];
+                  this.successList=[];
+                  this.ignoreCount=0;
+                  this.successCount=0; 
+                  console.log("errors" + errors.length);
+                  if(this.uploadResponse !=null){
+                	  this.ui_loader=false;
+                  	this.AfterSave_DefaultAttributes();
+	                  for(let i=0;i<errors.length;i++){
+	                	  console.log(errors[i].errorType);
+	                  	  if(errors[i].errorType=='Incorrect_Value'){	                  		  
+	                  		  this.errorinValue= false;
+	                          this.ignoreList[this.ignoreCount]=errors[i];
+	                          this.ignoreCount=this.ignoreCount+1;
+	                  	  }
+	                  	  else
+	                        if(errors[i].errorType=='Not_In_DB'){
+	                  			  this.errorinDB= false; 
+            	                  this.successList[this.successCount]=errors[i];
+	                              this.successCount=this.successCount+1;
+	                   	  }
+	                  	 if(this.errorinDB && this.errorinValue){
+	                  		  break;
+	                  	  }
+	                 }
+	                  this.uploadFileSelector.nativeElement.value = "";
+	                  console.log("response after massupload");
+	                  console.log(this.upcItemList);
+	                  this.resultMessage="Your changes have been successfully saved.";
+	                  document.getElementById("notifypartial").click(); 
+
+                  }
+                                 
+                }
+        );
+        
+        
+        this.uploadSub = this.carsUploadService.uploadResponseVal.subscribe(() => {
+        	this.AfterSave_DefaultAttributes();
+            this.ui_loader= this.carsUploadService.getuiloader();	
+        });
+        
+    }
+  
+  
+    updating_MassUploadData()
+    {
+        this.paginationSearch('save');  
+    	this.selectallcheck=false;
+		this.localallcheck=false;
+		this.isSelected = false;
+       	this.isLocalSelected=false;
+    	
+    }
+    
+    //
+    massUpload_functionality() { 
+    	this.selectall_LocalChanges1=[];
+    	this.selectallcheck=true;
+		this.localallcheck=true;
+		this.isSelected = true;
+       	this.isLocalSelected=true;
+
+    	this.ui_loader = true;
+ 
+        this.upcFileData.append('selectedAttributes', this.upload_AttributeList);
+        console.log(this.upload_AttributeList);
+       
+        console.log(this.upcFileData);
+        this.uploadUrl=this.urlName + '/services/massupload';
+        this.carsUploadService.runMassUpload(this.uploadUrl,this.upcFileData); 
+    }
+   
+    
+    uiLoaderFalse()
+    {
+    	this.ui_loader=false;
+    }
+    
+    //filechange method called when a file is uploaded....
+    fileChange(fileInput: any) {  
+         this.ui_loader=true; 
+    	/* this.selectallcheck=false;
+ 		 this.localallcheck=false;*/
+/* 		 this.isSelected = false;*/
+         this.isLocalSelected=true;
+      if(fileInput.target.files[0] != null){
+        let file: File = fileInput.target.files[0];
+        this.upcFileData = new FormData();     
+        this.upcFileData.append('uploadFile', file, file.name);
+        let searchParams = JSON.parse(localStorage.getItem('localStorageValue'));
+        searchParams.expandedLocalAttr=[];
+        searchParams["retAbbrTxt"] = this.retailname;
+        this.upcFileData.append('searchDTO1', JSON.stringify(searchParams));        
+        this.upcFileData.append('expandedLocalAttr',this.UpcLocalAttributeData);
+        this.filename=file.name;
+        var self = this;
+        let xhr = new XMLHttpRequest();
+		 xhr.onreadystatechange = function() {
+			
+         if (xhr.readyState === 4) {
+             if (xhr.status === 200) {
+                 console.log("Success"); 
+                 console.log(xhr);
+                 self.uiLoaderFalse();
+                 let invalidfile=JSON.parse(xhr.responseText)['errorMessage'];
+                 if(invalidfile=="mass upload file format error"){
+                 	document.getElementById("uploaderr").click();
+                 }else{
+                        document.getElementById('massuploadBtn').click();
+                 }
+                // document.getElementById("upload-file-selector").click();
+             } else {
+                 console.log("Failure");   
+                 self.uiLoaderFalse();
+                 document.getElementById("uploaderr").click();
+             }
+         }
+      }
+      xhr.open("POST", this.urlName + '/services/uploadfile', true);
+      xhr.send(this.upcFileData);
+        }else
+        {
+        this.ui_loader=false;
+        }  
+    }
+    
+ /*Code for Mass Upload Ends*/ 
+    
+    
+    //after double clicking the row this methods get called and data is populated in the drop down for editing
+        setClickedRow(index,parentval,tablecategory, rowvalue) {
+        	 this.selectedRow=-1;
+        	 this.selectedChildRow=-1;
+        	if(tablecategory=='parent'){
+            this.selectedRow = index;
+        	}
+        	
+        	if(tablecategory=='child' && rowvalue.exception==true){
+        		this.selectedChildRow=index;
+        		this.parentid=parentval;
+        	}
+        	
+            this.ui_loader = true;
+            this.save_view_functionlaity();
+
+            this.rows_data = rowvalue;
+            console.log("rowsData setclicked",this.rows_data);
+
+            let localStorageValue = JSON.parse(localStorage.getItem('localStorageValue'));
+            this.localStorageValue = JSON.stringify(localStorageValue);
+            console.log(this.localStorageValue);
+            this.editListrow = new Array();
+
+            this.http
+                .post(this.urlName + '/services/populateLocalAttributeValues', localStorageValue)
+                .subscribe(editRowvalues => {
+                    this.ui_loader = false;
+                    this.savecancelDisabled = false;
+                    
+                    this.editRowvaluesResponse = editRowvalues;
+                    
+                    this.editListrow0 = JSON.parse(this.editRowvaluesResponse._body)[0];
+                    this.editListrow1 = JSON.parse(this.editRowvaluesResponse._body)[1];
+                    this.editListrow2 = JSON.parse(this.editRowvaluesResponse._body)[2];
+                    this.editListrow3 = JSON.parse(this.editRowvaluesResponse._body)[3];
+                    this.editListrow4 = JSON.parse(this.editRowvaluesResponse._body)[4];
+                    this.editListrow5 = JSON.parse(this.editRowvaluesResponse._body)[5];
+                    this.editListrow6 = JSON.parse(this.editRowvaluesResponse._body)[6];
+                    this.editListrow7 = JSON.parse(this.editRowvaluesResponse._body)[7];
+                    this.editListrow8 = JSON.parse(this.editRowvaluesResponse._body)[8];
+                    this.editListrow9 = JSON.parse(this.editRowvaluesResponse._body)[9];
+                    this.editListrow10 = JSON.parse(this.editRowvaluesResponse._body)[10];
+                    this.editListrow11 = JSON.parse(this.editRowvaluesResponse._body)[11];
+                    this.editListrow12 = JSON.parse(this.editRowvaluesResponse._body)[12];
+                    this.editListrow13 = JSON.parse(this.editRowvaluesResponse._body)[13]; 
+                    this.editListrow14 = JSON.parse(this.editRowvaluesResponse._body)[14]; 
+                    this.editListrow15 = JSON.parse(this.editRowvaluesResponse._body)[15]; 
+                    this.editListrow16 = JSON.parse(this.editRowvaluesResponse._body)[16]; 
+                   /* this.editListrow52 = JSON.parse(editRowvalues._body)[52];
+                    this.editListrow53 = JSON.parse(editRowvalues._body)[53];
+                    this.editListrow54 = JSON.parse(editRowvalues._body)[54];
+                    this.editListrow55 = JSON.parse(editRowvalues._body)[55];
+                    this.editListrow56 = JSON.parse(editRowvalues._body)[56];
+                    this.editListrow57 = JSON.parse(editRowvalues._body)[57];*/
+                    this.editListrow58 = JSON.parse(this.editRowvaluesResponse._body)[58];
+                    this.editListrow59 = JSON.parse(this.editRowvaluesResponse._body)[59];
+                    this.editListrow60 = JSON.parse(this.editRowvaluesResponse._body)[60];
+                    this.editListrow61 = JSON.parse(this.editRowvaluesResponse._body)[61];
+                    this.editListrow62 = JSON.parse(this.editRowvaluesResponse._body)[62];
+                    this.editListrow63 = JSON.parse(this.editRowvaluesResponse._body)[63];
+                    this.editListrow64 = JSON.parse(this.editRowvaluesResponse._body)[64];
+                    this.editListrow65 = JSON.parse(this.editRowvaluesResponse._body)[65];
+                    this.editListrow66 = JSON.parse(this.editRowvaluesResponse._body)[66];
+                    this.editListrow67 = JSON.parse(this.editRowvaluesResponse._body)[67];
+                    this.editListrow68 = JSON.parse(this.editRowvaluesResponse._body)[68];
+                    this.editListrow69 = JSON.parse(this.editRowvaluesResponse._body)[69];
+                    this.editListrow70 = JSON.parse(this.editRowvaluesResponse._body)[70];
+                    this.editListrow71 = JSON.parse(this.editRowvaluesResponse._body)[71];
+                    this.editListrow72 = JSON.parse(this.editRowvaluesResponse._body)[72];
+
+                }, error => {
+                    console.log(error.json());
+                    this.ui_loader = false;
+                    document.getElementById("exceptionerror").click();
+                });
+        }
+
+        cancel_data() { 
+        	this.AfterSave_DefaultAttributes();
+            this.tableheadercheckbox = false;
+            this.savecancelDisabled = true; 
+            this.selectedRow = -1;
+            this.selectedPasteRowValues = [];
+            this.newlist = [];  
+            this.paginationSearch('nosave');
+        }
+        expandPlusRow(indexID)
+        {
+        	this.ExpandChildArray.push(indexID);
+        	
+        }
+
+        expandMinusRow(indexID)
+        {
+        	
+        	 let index = this.ExpandChildArray.indexOf(indexID);
+             if (index !== -1) {
+             	
+            	 this.ExpandChildArray.splice(index, 1);
+             }
+        	
+        }
+        /*expandRow(index): void {
+            this.openIndex = index === this.openIndex ? -1 : index;
+
+            this.expandedIndex = index === this.expandedIndex ? -1 : index;
+        }*/
+
+
+//newlist is formed for the editedvalues--editing the row data by double clicking         
+        save_view_functionlaity() {
+            /* alert(this.if_edited);*/
+      
+            if (this.if_edited) {
+                if (this.newlist.length == 0) {
+                    this.newlist.push(this.rows_data);
+                    this.if_edited=false;
+                } else {
+                    this.if_notPresent = true;
+                    for (let x of this.newlist) {
+
+                        if (x.id == this.rows_data.id) {
+                            var newlist_index = this.newlist.indexOf(x);
+                            console.log(newlist_index);
+                            if (newlist_index > -1) {
+                                this.newlist.splice(newlist_index, 1);
+                                this.newlist.push(this.rows_data);
+                            }
+                            this.if_notPresent = false;
+                        }
+                    }
+                    this.if_edited=false;
+                }
+                if (this.if_notPresent) {
+                	
+                    this.newlist.push(this.rows_data);
+                    this.if_edited=false;
+                }
+            }
+
+              console.log("during save",this.newlist);
+              
+        }
+
+//after clicking save button in the table --saving the changes
+        save_UPC_Data() {
+
+            this.ui_loader = true;
+            this.save_view_functionlaity();
+            this.Event_Trigger = false;
+            this.SavePaste = "";
+
+            this.savelist = this.newlist; //this is for edited rows --this.newlist
+          
+            
+            if (this.pasteCondition) {
+                for (let x = 0; x < this.updatedRowsTableData.length; x++) {
+                    this.savelist.push(this.updatedRowsTableData[x]);
+
+                }
+                console.log(this.savelist);
+            }
+                
+            
+            console.log("savelist",this.savelist);
+        
+            if (this.savelist.length > 0) {
+            	console.log("paste/massupload/edit-save");
+                this.http.post(this.urlName + '/services/saveLocalAttributes', this.savelist).subscribe(data => {
+                    	let upcDataResponse: any = data.json();                    
+                        this.ui_loader = false;
+                        if (upcDataResponse.code == 200) {                       
+                        	this.AfterSave_DefaultAttributes();                          
+                        }
+
+                        this.resultMessage = upcDataResponse.message;
+                        this.paginationSearch('save');
+                        
+                    }, error => {
+                    	this.AfterSave_DefaultAttributes();
+                        console.log(error.json());
+                        this.ui_loader = false;
+                        document.getElementById("exceptionerror").click();
+                    });
+            } else {
+            	this.ui_loader = false;
+            	if(this.pasteAllCondition == false){
+            	 this.resultMessage =  "You have not updated any record";
+            	 document.getElementById('saveBtn').click();
+            	}
+            }
+        
+            
+        	
+            if (this.pasteAllCondition == true) {
+            	console.log("pasteall-save");
+            	this.pasteAllCondition=false;
+                    this.SavePaste = this.copiedDataPasteAll;
+                    this.TotalList = [];
+                    this.TotalList.push(this.searchModel);
+                    this.TotalList.push(this.SavePaste);
+                    if (this.newlist.length > 0) {
+                        for (let x = 0; x < this.newlist.length; x++) {
+                            this.TotalList.push(this.newlist[x]);
+
+                        }
+                    }
+                    if(this.rows_data != null || this.rows_data != [] ){
+                    	
+                    	this.TotalList.push(this.rows_data);
+                    }
+                   console.log("totallist -pastall",this.TotalList);
+                    this.http
+                        .post(this.urlName + '/services/pasteAllLocalAttributes',
+                            this.TotalList)
+                        .subscribe(data => {
+                            this.ui_loader = false;
+                            if (data.status == 200) {
+                            	
+                                this.AfterSave_DefaultAttributes();
+                                this.paginationSearch('save');
+                                this.resultMessage = "Your changes have been saved";
+                            } else {
+                            	this.AfterSave_DefaultAttributes();
+                            	this.paginationSearch('save');
+                            	this.resultMessage = "Your changes have not been saved";
+                            }
+
+                        }, error => {
+                        	this.AfterSave_DefaultAttributes();
+                        	this.paginationSearch('save');
+                            this.ui_loader = false;
+                            document.getElementById("exceptionerror").click();
+                        });
+                }
+            
+
+          
+
+        }
+
+        ///after safe making all values to default
+        AfterSave_DefaultAttributes()
+        {
+        
+        	this.isPasteAllActive=false;
+            this.default_Attributes();
+            this.savecancelDisabled = true;            
+            this.ExpandChildArray=[];
+        	this.selectedRow = -1;
+        	this.selectedChildRow=-1;
+            this.selectallcheck=false;
+    		this.localallcheck=false;
+    		this.isSelected = false;
+           	this.isLocalSelected=false;
+            this.upload_AttributeList=[];
+            this.savelist = [];
+            this.selectedPasteRowValues = [];
+            this.pasteAllCondition = false;
+            this.TotalList = [];
+            this.pasteAttributeList = [];
+            this.paste_All_AttributeList = [];           
+            this.if_edited = false;
+            this.updatedRowsTableData=[];
+            this.indexIncrease=0;
+            this.indexUpdateIncrease=0;
+            this.updatedRowsTableData=[];
+            this.modifiedRowsData=[];
+            this.copiedData=null;
+            this.pasteCondition = false;
+            this.uploadCondition=false;   
+            this.upcItemList=[];
+            this.uploadresponse=[];
+            this.upcFileData={};
+            this.parentid=-1;
+            this.tableCheckboxCount=0;
+        	this.rows_data=null;
+        	this.newlist=[];
+            this.resultMessage="";
+        	this.disablingEditHighlight(); 
+        }
+        
+        disablingEditHighlight() {
+        	if(this.tableData != [] && this.tableData != null && this.tableData != 'undefined'){
+           	 for (let z = 0; z < this.tableData.length; z++) {
+                    this.tableData[z].updatedValues=[];
+                }
+           	}
+        }
+        
+        
+        selectedretail: string;
+
+        onChangeretail(newValue) {
+            this.attrbuttonhide=true;
+            this.selectedretail = newValue;
+            if(this.selectedcategory=='US' && this.selectedretail=='-12700'){
+                this.attrbuttonhide=false;
+            }
+           
+            for (let retailer of this.retails) {
+                if (retailer.retId == newValue) {
+                    this.retailname = retailer.retAbbrTxt;
+                }
+            }   
+            if(this.selectedcategory=='US' && this.selectedretail=='-12700'){
+           	 this.retailname="WM US VMP";
+           }
+            if(this.selectedcategory){
+            	this.getUpcLocalAttributeValuesList();
+            }
+        }
+        
+        
+        getUpcLocalAttributeValuesList() {
+        	this.localcheckboxPresent=false;
+        	this.localAttributeSearchData = {};
+        	this.localAttributeSearchData.attrSourceInd = "1";
+        	this.localAttributeSearchData.ctryCd = this.selectedcategory;
+        	this.localAttributeSearchData.retId = this.selectedretail;
+        	console.log(this.localAttributeSearchData)
+        	if(!this.checkObjectEmptyKeys(this.localAttributeSearchData)){
+            	this.ui_loader = true;
+        		this.http.post(this.urlName + '/services/getExpandedAttributes', this.localAttributeSearchData).subscribe(localAttributeData => {
+            		this.UpcLocalAttributeData = localAttributeData.json().attributes;
+            		this.ui_loader = false;
+            		console.log("upclocal",this.UpcLocalAttributeData);
+            		for(let x=9 ; x<=30 ; x++){
+            			var temp="Product Local Attribute "+x;
+    	        		if(this.UpcLocalAttributeData.indexOf(temp) !== -1){
+    	        			this.localcheckboxPresent=true;
+    	        			
+    	        			break;// after any local attribute found
+    	        		}
+    	        		
+            		}
+            		this.varriedLocalTablewidth += this.UpcLocalAttributeData.length * 110;
+            		this.varriedLocalTablewidthLocal += this.UpcLocalAttributeData.length * 110 ;
+                })
+        	}
+        	
+                    	
+        }
+
+        updateTableModifedData() {
+        	
+    
+        	this.selectedRow = -1;
+       	    this.selectedChildRow=-1;
+       	    console.log("rowdata", this.rows_data);
+       	    console.log("editedvalues", this.newlist);
+       	    
+       	    //updatedvalues initialization 
+            for (var i = 0; i < this.tableData.length; i++) {
+                this.tableData[i].updatedValues = [];
+                for (var keys in this.tableData[i]) {
+                    if (this.tableData[i][keys] === "-") {
+                        this.tableData[i][keys] = "";
+                    }
+                }
+                for (var keys in this.copyResponseData[i]) {
+                    if (this.copyResponseData[i][keys] === "-") {
+                        this.copyResponseData[i][keys] = "";
+                    }
+                }
+                
+                if (this.tableData[i].items != null) {
+                    for (var k = 0; k < this.tableData[i].items.length; k++) {
+                        this.tableData[i].items[k].updatedValues = [];
+
+                        for (var t in this.tableData[i].items[k]) {
+                            if (this.tableData[i].items[t] === "-") {
+                                this.tableData[i].items[t] = "";
+                            }
+                        }
+                    }
+                } else {
+                    this.tableData[i].items = [];
+                }
+
+                if (this.isPasteAllActive) {
+                    for (var j = 0; j < this.paste_All_AttributeList.length; j++) {
+                        if (this.tableData[i][this.paste_All_AttributeList[j]] !== this.copiedData[this.paste_All_AttributeList[j]]) {
+                            this.tableData[i][this.paste_All_AttributeList[j]] = this.copiedData[this.paste_All_AttributeList[j]];
+                            this.tableData[i].updatedValues.push(this.paste_All_AttributeList[j]);
+                            if (this.tableData[i].items != null) {
+                                for (var x = 0; x < this.tableData[i].items.length; x++) {
+                                	if(this.tableData[i].items[x].exception != true){
+                                     this.tableData[i].items[x][this.paste_All_AttributeList[j]] = this.copiedData[this.paste_All_AttributeList[j]];
+                  				       this.tableData[i].items[x].updatedValues.push(this.paste_All_AttributeList[j]);
+
+                                		
+                                    }
+                                }
+                            }
+
+                        }
+
+                    }
+                }
+        
+            }
+
+            //for paste maintaining in pagination  
+            console.log("paste-updatedrowvalues", this.updatedRowsTableData)
+            if (this.updatedRowsTableData && this.updatedRowsTableData.length > 0) {
+                for (var i = 0; i < this.updatedRowsTableData.length; i++) {
+                    const pos = this.tableData.findIndex((char) => {
+                        return char.id == this.updatedRowsTableData[i].id;
+                    });
+                    if (pos !== -1) {
+                        this.tableData[pos] = this.updatedRowsTableData[i];
+                       
+                       if (this.tableData[pos].items != null) {
+                            for (let j = 0; j < this.tableData[pos].items.length; j++) {
+                            	if(this.tableData[pos].items[j].exception != true){
+                                this.tableData[pos].items[j] =this.updatedRowsTableData[i];
+                            	}
+                            }
+                        }
+                  }
+                }
+
+
+            }
+
+            //for edit color and  data maintaining in pagination 
+            console.log("editing rows");
+            if (this.newlist != [] && this.newlist.length > 0) {
+            	
+                for (var x = 0; x < this.newlist.length; x++) {
+                	var isPresent=0;
+                    const pos = this.tableData.findIndex((char) => {
+                        return char.id == this.newlist[x].id;
+                    });
+
+                    if (pos !== -1){
+                        this.tableData[pos] = this.newlist[x];
+                        isPresent=1;
+                    }
+                    if(isPresent==0){
+                    for(var i=0;i<this.tableData.length;i++){
+                  	 if(this.tableData[i].items !== null){
+                  		 for(j=0;j<this.tableData[i].items.length;j++){
+                         if(this.tableData[i].items[j].id==this.newlist[x].id){   
+                      	this.tableData[i].items[j] = this.newlist[x];
+                      	break;
+                       }
+                  	 }
+                  }
+                } 
+              }
+           }
+         }      
+
+            console.log("editing rows");
+
+            if (this.rows_data != null) {
+                const pos = this.tableData.findIndex((char) => {
+                    return char.id == this.rows_data.id;
+                });
+                if (pos !== -1) {
+                    this.tableData[pos] = this.rows_data;
+                }
+                    for(var i=0;i<this.tableData.length;i++){
+               	   if(this.tableData[i].items !== null){
+               		 for(j=0;j<this.tableData[i].items.length;j++){
+                      if(this.tableData[i].items[j].id==this.rows_data.id){   
+                   	this.tableData[i].items[j] = this.rows_data;
+                   	break;
+                    }
+               	  }
+               	}
+              }
+           }
+            //for maintaining the checkbox in pagination 
+            console.log("table checkbox", this.selectedPasteRowValues);
+            this.tableheadercheckbox = false;
+            this.tableCheckboxCount = 0;
+            if (this.pasteCondition == false && this.selectedPasteRowValues.length > 0){
+                for (var i = 0; i < this.selectedPasteRowValues.length; i++) {
+                    const pos = this.tableData.findIndex((char) => {
+                        return char.id == this.selectedPasteRowValues[i].id;
+                    });
+                    if (pos !== -1) {
+                        this.tableCheckboxCount++;
+                        this.tableData[pos].rowCheckbox = true;
+                    }
+                }
+                console.log("tableCheckboxCount",this.tableCheckboxCount);
+                console.log("tableData.length",this.tableData.length);
+                if (this.tableCheckboxCount == this.tableData.length) {
+                  this.tableheadercheckbox = true;
+                }
+               
+            }
+            else{
+            	if(this.pasteCondition == true){
+            	this.pageCheckboxDisabling();
+            	}
+            }
+        }
+
+
+          find_filter(model) {
+        	
+        	this.AfterSave_DefaultAttributes();
+        	this.mainForm.markAsTouched();
+        	this.isFindClicked = true;
+        	this.showtable = this.mainForm.valid ? "inline" : "none";
+        	this.ui_loader = true;
+            this.showDropDown = false;
+            this.savecancelDisabled = true;
+        	this.selectedpagecount = 50;
+            // console.log(this.mainForm.value);
+            model['pageStartIndex'] = 1;
+            model['pageEndIndex'] = 50;
+            this.pageSize = 50;
+            if(this.selectedcategory=='US' && this.selectedretail=='-12700'){
+                this.vmp="true";
+                model["vmp"] = this.vmp;
+
+            } else {
+                this.vmp="false";
+                model["vmp"] = this.vmp;
+            }
+            console.log(model);
+            model["ko_item"] = this.ko_Status;              
+            this.searchModel = model;
+            this.model = JSON.stringify(model);
+            console.log(this.model);
+            this.tableData = new Array();
+            this.errormsg = "";
+            this.responseCode = "";
+            this.selectedPasteRowValues = [];
+            this.newlist = [];
+            this.pasteAttributeList = [];
+            this.paste_All_AttributeList = [];
+            this.updatedRowsTableData=[];
+            this.ExpandChildArray=[];
+            this.if_edited = false;
+            this.indexIncrease=0;
+            this.indexUpdateIncrease=0;
+            this.done = 0;   
+            this.copycount = 0;
+            this.tableheadercheckbox = false;
+            
+            this.displayddl = this.mainForm.valid ? "none" : "block";
+            this.showalert = this.mainForm.valid ? "none" : "inline";
+            localStorage.setItem('currentUser', JSON.stringify(model));
+            localStorage.setItem('localStorageValue', JSON.stringify(this.mainForm.value));
+            this.selectedRow = -1;
+       	    this.selectedChildRow=-1;
+            if (this.mainForm.valid) {
+                this.http
+                    .post(this.urlName + '/services/basicSearch', model)
+                    .subscribe(upcData => {
+                        this.ui_loader = false;
+                        let upcDataResp: any = upcData;                        
+                        this.responseCode = JSON.parse(upcDataResp._body)['code'];
+                        console.log(this.responseCode);
+                        this.errormsg = JSON.parse(upcDataResp._body)['message'];
+                        if( JSON.parse(upcDataResp._body)['upcItemsDto'] !== null ) {                    	
+                        	this.tableData = JSON.parse(upcDataResp._body)['upcItemsDto'];
+                        	this.copyResponseData = JSON.parse(upcDataResp._body)['upcItemsDto'];                        	
+                        	this.updateTableModifedData();
+                        } else {
+                        	this.tableData = [];
+                        	this.copyResponseData = [];
+                        	
+                        }  
+                        
+                        /*this.tableData = JSON.parse(upcDataResp._body)['upcItemsDto'];
+                        console.log(this.tableData );
+                        this.copyResponseData = JSON.parse(upcDataResp._body)['upcItemsDto'];
+                        this.updateTableModifedData();*/
+                        
+                     // to reset scrolling position of tables
+                        document.getElementById('table-container1').scrollLeft = document.getElementById('table-container2').scrollLeft = document.getElementById('table-container3').scrollLeft = document.getElementById('table-container4').scrollLeft = 0;
+                        document.getElementById('table-container1').scrollTop = document.getElementById('table-container2').scrollTop = document.getElementById('table-container3').scrollTop = document.getElementById('table-container4').scrollTop = 0; 
+                        
+                        this.plusMinusColorChange();
+                        this.copiedDataPasteAll = {};
+                        if (this.tableData.length != 0) {
+                            this.copiedDataPasteAll = JSON.parse(upcDataResp._body)['upcItemsDto'][0];
+                            Object.keys(this.copiedDataPasteAll).forEach(key => {
+                                let value = this.copiedDataPasteAll[key];
+                                value = null;
+                                this.copiedDataPasteAll[key] = value;
+                            });
+                        }
+                        
+                        console.log("copieddataPasteAll",this.copiedDataPasteAll);
+                        
+                        if( JSON.parse(upcDataResp._body)['paginationDTO'] !== null ) {
+	                        var pagination = JSON.parse(upcDataResp._body)['paginationDTO'];
+	                        this.totalItems = pagination["totalNoOfRecords"];
+	                        this.totalPages = pagination["totalPage"];
+	                        this.currentPage = 1;
+	                        this.endPage = this.totalPages;
+	                        this.selectedRow = -1;
+	                        if (this.endPage == 1 || this.endPage == 0) {
+	                            this.pageHide = false;
+	                        } else {
+	                            this.pageHide = true;
+	                        }
+	                        this.pages = new Array();
+	                        for (let i = 1; i <= this.totalPages; i++) {
+	                            let lg = {
+	                                id: i,
+	                                name: i
+	                            };
+	                            this.pages.push(lg);
+	                        }
+	                        if (this.endPage == 1 || this.endPage == 0 || this.currentPage == 1) {
+	                            this.firstPage = false;
+	                        } else {
+	                            this.firstPage = true;
+	                        }
+                        }
+                        console.log(this.tableData);
+                       
+                    }, error => {
+                        console.log(error.json());
+                        this.ui_loader = false;
+                        document.getElementById("exceptionerror").click();
+                    });
+            } else {
+                this.ui_loader = false;
+              }
+        }
+
+        plusMinusColorChange(){
+            if(this.tableData != null || this.tableData !=[]){
+        	for (let x = 0; x < this.tableData.length; x++) {
+        		this.tableData[x].isPlusMinusColor=false;
+               if(this.tableData[x].items !=null ){
+                for(let y=0;y<this.tableData[x].items.length;y++){
+                	if(this.tableData[x].items[y].exception==true){
+                		this.tableData[x].isPlusMinusColor=true;
+                		}
+                	}
+               }
+            }
+        }
+    }    
+
+        onko(newvalue) {
+        	   this.ui_loader = true;
+               this.koStatus = newvalue;
+               this.ko_Status = newvalue;
+               var tempSearchParams = localStorage.getItem('localStorageValue');
+              let searchParams = JSON.parse(tempSearchParams);
+              //searchParams["ko_item"] = newvalue;
+             
+               searchParams["ko_item"] = newvalue;
+               localStorage.removeItem('localStorageValue');
+               localStorage.setItem('localStorageValue', JSON.stringify(searchParams));
+               var tempSearchParams = localStorage.getItem('localStorageValue');
+
+               // create an array of pages to ng-repeat in the pager control
+
+               searchParams['pageStartIndex'] = 1;
+               searchParams['pageEndIndex'] = this.selectedpagecount;
+               console.log(searchParams);
+              
+               this.errormsg = "";
+               this.tableData = new Array();
+               
+            this.http
+                .post(this.urlName + '/services/basicSearch', searchParams)
+                .subscribe(upcData => {
+                    let upcDataResponse: any = upcData;                
+                
+	                this.responseCode = JSON.parse(upcDataResponse._body)['code'];
+	                this.errormsg = JSON.parse(upcDataResponse._body)['message'];
+	                if( JSON.parse(upcDataResponse._body)['upcItemsDto'] !== null ) {                    	
+	                	this.tableData = JSON.parse(upcDataResponse._body)['upcItemsDto'];
+	                	this.copyResponseData = JSON.parse(upcDataResponse._body)['upcItemsDto'];                        	
+	                	this.updateTableModifedData();
+	                	this.plusMinusColorChange();
+	                } else {
+	                	this.tableData = [];
+	                	this.copyResponseData = [];
+	                	
+	                }  
+                    
+                    // to reset scrolling position of tables
+                    document.getElementById('table-container1').scrollLeft = document.getElementById('table-container2').scrollLeft = document.getElementById('table-container3').scrollLeft = document.getElementById('table-container4').scrollLeft = 0;
+                    document.getElementById('table-container1').scrollTop = document.getElementById('table-container2').scrollTop = document.getElementById('table-container3').scrollTop = document.getElementById('table-container4').scrollTop = 0; 
+                    
+                    if( JSON.parse(upcDataResponse._body)['paginationDTO'] !== null ) {
+                    var pagination = JSON.parse(upcDataResponse._body)['paginationDTO'];
+                    this.totalItems = pagination["totalNoOfRecords"];
+                    this.totalPages = pagination["totalPage"];
+                    this.currentPage = 1;
+                    this.endPage = this.totalPages;
+                    this.pages = new Array();
+                    for (let i = 1; i <= this.totalPages; i++) {
+                        let lg = {
+                            id: i,
+                            name: i
+                        };
+                        this.pages.push(lg);
+                    }
+                    
+                    if (this.tableData == "" || this.tableData == null || this.tableData == undefined || this.tableData == "[]") {
+
+                        this.errormsg = "No records found";
+                    } else {
+
+                        this.errormsg = "";
+                    }
+                    console.log(this.tableData);
+
+                    if (this.endPage == 1 || this.endPage == 0 || this.currentPage == 1) {
+	                  this.firstPage = false;
+	                } else {
+	                  this.firstPage = true;
+	                }
+                   if (this.currentPage == 1) {
+                        this.firstPage = false;
+                    } else {
+                        this.firstPage = true;
+                    }
+            
+                    if (this.endPage === this.currentPage) {
+                        this.pageHide = false;
+                    } else {
+                        this.pageHide = true;
+                    } 
+                 }
+                    this.ui_loader = false;                   
+                }, error => {
+                    console.log(error.json());    
+                    this.ui_loader = false;
+                    document.getElementById("exceptionerror").click();
+                });
+
+        }
+
+        nonko_items(newvalue) {
+
+            newvalue = "n";
+        }
+
+
+        toggle(val) {
+            this.editRowId = val;
+            console.log(this.editRowId)
+        }
+
+        onChangecategory(newValue) {
+            this.selectedcategory = newValue;
+            
+            if(this.oldCountryValueLocal == "US" && this.retId =="-12700"){
+				this.retId = "";
+				this.selectedretail = "";
+			}
+			this.oldCountryValueLocal = newValue;
+			
+            if(this.selectedretail){
+            	this.getUpcLocalAttributeValuesList();
+            }
+        }
+
+
+        onSelect() {
+            this.showDropDown = !this.showDropDown;
+            this.displayddl = this.showDropDown ? "block" : "none";
+        }
+
+        onSelectExpand() {
+            this.showDropDown1 = !this.showDropDown1;
+            this.displayddl1 = this.showDropDown1 ? "inline" : "none";
+            this.searchval = this.showDropDown1 ? "Basic Search" : "Advanced Search";
+
+        }
+
+        clearSearch() {
+        	this.isFindClicked = false;
+            this.vend_nbr = "";
+            this.upc = "";
+            this.item_nbr = "";
+            this.item_desc_1 = "";
+            this.item_desc_2 = "";
+            this.size_desc = "";
+            this.vnpk_qty = "";
+            this.wm_acting_deptnum = "";
+            this.fineline_num = "";
+            this.sku_desc = "";
+            this.package_group = "";
+            this.category = "";
+            this.sub_category = "";
+            this.brand = "";
+            this.flavor = "";
+            this.unit_size = "";
+            this.retailpack_quantity = "";
+            this.package_material = "";
+            this.supplier = "";
+            this.ic_fc = "";
+            this.calorie_content = "";
+            this.unitcase_conv = "";
+            this.ltr = "";
+            this.localAttribute9 = "";
+            this.localAttribute10 = "";
+            this.localAttribute11 = "";
+            this.localAttribute12 = "";
+            this.localAttribute13 = "";
+            this.localAttribute14 = "";
+            this.localAttribute15 = "";
+            this.localAttribute16 = "";
+            this.localAttribute17 = "";
+            this.localAttribute18 = "";
+            this.localAttribute19 = "";
+            this.localAttribute20 = "";
+            this.localAttribute21 = "";
+            this.localAttribute22 = "";
+            this.localAttribute23 = "";
+            this.localAttribute24 = "";
+            this.localAttribute25 = "";
+            this.localAttribute26 = "";
+            this.localAttribute27 = "";
+            this.localAttribute28 = "";
+            this.localAttribute29 = "";
+            this.localAttribute30 = "";
+            this.showalert = "none";
+
+        }
+
+        selectedpage: any = 1;
+        onChangepage(newValue) {
+            console.log(newValue);
+            this.currentPage = newValue;
+            this.paginationSearch('nosave');
+        }
+
+        selectedpagecount: any = 50;
+        
+        onChangepgcnt(newValue) {
+            this.selectedpagecount = newValue;
+            this.pageSize = newValue;
+            this.ui_loader = true;
+            this.selectedRow = -1;
+       	    this.selectedChildRow=-1;
+            var tempSearchParams = localStorage.getItem('localStorageValue');
+            let searchParams = JSON.parse(tempSearchParams);
+            if(this.pageSize == 100){
+                if(this.currentPage > Math.ceil((this.totalPages)/2))
+                {
+                    this.currentPage = Math.ceil((this.totalPages)/2);
+                  
+                } 
+             }   
+            
+            this.startIndex = (this.currentPage - 1) * this.pageSize + 1;
+            this.endIndex = (this.startIndex + this.pageSize - 1);
+            // create an array of pages to ng-repeat in the pager control
+
+            searchParams['pageStartIndex'] = this.startIndex;
+            searchParams['pageEndIndex'] = this.endIndex;
+            console.log(searchParams);
+            this.tableData = new Array();
+
+            this.http
+                .post(this.urlName + '/services/basicSearch', searchParams)
+                .subscribe(upcData => {
+                    let upcDataResponse: any = upcData;
+                
+                    this.showtable = this.mainForm.valid ? "inline" : "none";
+                    this.displayddl = this.mainForm.valid ? "none" : "block";
+                    this.showalert = this.mainForm.valid ? "none" : "inline";                  
+                    
+                    this.responseCode = JSON.parse(upcDataResponse._body)['code'];
+                    this.errormsg = JSON.parse(upcDataResponse._body)['message'];
+                    if( JSON.parse(upcDataResponse._body)['upcItemsDto'] !== null ) {                    	
+                    	this.tableData = JSON.parse(upcDataResponse._body)['upcItemsDto'];
+                    	this.copyResponseData = JSON.parse(upcDataResponse._body)['upcItemsDto'];                        	
+                    	this.updateTableModifedData();
+                    	this.plusMinusColorChange();
+                    } else {
+                    	this.tableData = [];
+                    	this.copyResponseData = [];
+                    	
+                    }  
+                    
+                    var pagination = JSON.parse(upcDataResponse._body)['paginationDTO'];
+                    console.log("after 100", this.tableData);
+                    this.plusMinusColorChange();
+                    this.totalItems = pagination["totalNoOfRecords"];
+                    this.totalPages = pagination["totalPage"];
+                 // to reset scrolling position of tables
+                    document.getElementById('table-container1').scrollLeft = document.getElementById('table-container2').scrollLeft = document.getElementById('table-container3').scrollLeft = document.getElementById('table-container4').scrollLeft = 0;
+                    document.getElementById('table-container1').scrollTop = document.getElementById('table-container2').scrollTop = document.getElementById('table-container3').scrollTop = document.getElementById('table-container4').scrollTop = 0; 
+                    
+                    //this.currentPage = 1;
+                    this.pageSize = newValue;
+                    this.endPage = this.totalPages;
+                    this.pages = new Array();
+                    for (let i = 1; i <= this.totalPages; i++) {
+                        let lg = {
+                            id: i,
+                            name: i
+                        };
+                        this.pages.push(lg);
+                    }
+                    
+                    if (this.currentPage == 1) {
+                        this.firstPage = false;
+                    } else {
+                        this.firstPage = true;
+                    }
+            
+                    if (this.endPage === this.currentPage) {
+                        this.pageHide = false;
+                    } else {
+                        this.pageHide = true;
+                    }                
+                    console.log(this.tableData);
+                    this.ui_loader = false;
+                }, error => {
+                    console.log(error.json());
+                    this.ui_loader = false;
+                    document.getElementById("exceptionerror").click();
+
+                });
+            this.paginationSearch('nosave');
+        }
+       
+        onChangeexport(newValue) {
+          let localStorageValue = JSON.parse(localStorage.getItem('localStorageValue'));
+            this.localStorageValue = JSON.stringify(localStorageValue);
+           localStorageValue.expandedLocalAttr=[];
+           localStorageValue.expandedLocalAttr=this.UpcLocalAttributeData;
+            this.selectedexport = newValue;
+            var date = new Date(); 
+            var day = date.getDate();
+            var monthIndex = date.getMonth();
+            var year = date.getFullYear();
+            var minutes = date.getMinutes();
+            var hours = date.getHours();
+            var seconds = date.getSeconds();
+            this.myDate = day+"-"+(monthIndex+1)+"-"+year+" "+hours+minutes+seconds;
+            console.log(this.myDate);
+            
+            if (newValue == "1") {
+                this.ui_loader = true;
+                let headers = new Headers({
+                    'Content-Type': 'application/json',
+                    'MyApp-Application': 'AppName',
+                    'Accept': 'application/vnd.ms-excel'
+                });
+                let options = new RequestOptions({
+                    headers: headers,
+                    responseType: ResponseContentType.Blob
+                });
+
+            console.log(localStorageValue);
+                this.http
+                    .post(this.urlName + '/services/export',
+                        localStorageValue, options)
+                    .subscribe(data => {
+                        if (navigator.appVersion.toString().indexOf('.NET') > 0)
+                            window.navigator.msSaveBlob(data.blob(), "Export_UPC-Items_" + this.selectedcategory + "_" + this.retailname +"_Report_"+this.myDate+".xlsx");
+                        else {
+                            var a = document.createElement("a");
+                            a.href = URL.createObjectURL(data.blob());
+                            a.download = "Export_UPC-Items_" + this.selectedcategory + "_" + this.retailname +"_Report_"+this.myDate+ ".xlsx";
+                            a.click();
+                        }
+                        this.ui_loader = false;
+                        this.selectedexport = 0;
+
+                    }, error => {
+                        console.log(error.json());
+                        this.ui_loader = false;
+                        document.getElementById("exceptionerror").click();
+                    });
+
+            } else
+            if (newValue == "2") {
+                this.ui_loader = true;
+                let headers = new Headers({
+                    'Content-Type': 'application/json',
+                    'MyApp-Application': 'AppName',
+                    'Accept': 'application/vnd.ms-excel'
+                });
+                let options = new RequestOptions({
+                    headers: headers,
+                    responseType: ResponseContentType.Blob
+                });
+                this.http.post(this.urlName + '/services/exportNewUpc', localStorageValue, options)
+                    .subscribe(data => {
+                        if (navigator.appVersion.toString().indexOf('.NET') > 0)
+                        window.navigator.msSaveBlob(data.blob(), "Export_NewUPC-Items_" + this.selectedcategory + "_" + this.retailname +"_Report_"+this.myDate+".xlsx");
+
+                        else {
+                            var a = document.createElement("a");
+                            a.href = URL.createObjectURL(data.blob());
+                            a.download = "Export_NewUPC-Items_" + this.selectedcategory + "_" + this.retailname +"_Report_"+this.myDate+ ".xlsx";
+                            a.click();
+                        }
+                        this.ui_loader = false;
+                        this.selectedexport = 0;
+                    }, error => {
+                        console.log(error.json());
+                        this.ui_loader = false;
+                        document.getElementById("exceptionerror").click();
+                    });
+
+            } else
+            if (newValue == "3") {
+                this.ui_loader = true;
+                let headers = new Headers({
+                    'Content-Type': 'application/json',
+                    'MyApp-Application': 'AppName',
+                    'Accept': 'application/vnd.ms-excel'
+                });
+                let options = new RequestOptions({
+                    headers: headers,
+                    responseType: ResponseContentType.Blob
+                });
+                this.http.post(this.urlName + '/services/exportAll', localStorageValue, options)
+                    .subscribe(data => {
+                        if (navigator.appVersion.toString().indexOf('.NET') > 0)
+                            window.navigator.msSaveBlob(data.blob(), "Export_AllUPC-Items_" + this.selectedcategory + "_" + this.retailname +"_Report_"+this.myDate+".xlsx");
+
+                        else {
+                            var a = document.createElement("a");
+                            a.href = URL.createObjectURL(data.blob());
+                            a.download = "Export_AllUPC-Items_" + this.selectedcategory + "_" + this.retailname +"_Report_"+this.myDate+ ".xlsx";
+                            a.click();
+                        }
+                        this.ui_loader = false;
+                        this.selectedexport = 0;
+                    }, error => {
+                        console.log(error.json());
+                        this.ui_loader = false;
+                        document.getElementById("exceptionerror").click();
+                    });
+            }
+
+           
+        }
+
+        onChangeicfc(newValue) {
+            this.selectedicfc = "";
+            console.log(this.selectedicfc);
+        }
+
+        
+        selectPage(selPage) {
+            console.log("calling Next method////////////////");
+            this.ui_loader = true;
+            let startPage: number, endPage: number;
+            this.endPage = this.totalPages;
+
+            if (selPage == "First") {
+                this.currentPage = 1;
+                this.paginationSearch('nosave');
+            } else if (selPage == "First") {
+                this.currentPage = 1;
+                this.paginationSearch('nosave');
+            } else if (selPage == "Previous" && this.currentPage > 1) {
+                this.currentPage = this.currentPage - 1;
+                this.paginationSearch('nosave');
+            } else if (selPage == "Next" && this.currentPage < this.totalPages) {
+
+                this.currentPage = this.currentPage + 1;
+                this.paginationSearch('nosave');
+            } else if (selPage == "Last") {
+                this.currentPage = this.totalPages;
+                console.log(this.totalPages);
+                this.paginationSearch('nosave');
+            }
+
+        }
+        
+        checkObjectEmptyKeys(obj) {	
+		    for (var key in obj) {
+		        if (obj[key] == null || obj[key] == "")
+		            return true;
+		    }
+		    return false;
+		}
+
+        paginationSearch(action) {
+        	
+            // calculate start and end item indexes
+        	this.showDropDown = false;
+            this.startIndex = (this.currentPage - 1) * this.pageSize + 1;
+            this.endIndex = (this.startIndex + this.pageSize - 1);
+            // create an array of pages to ng-repeat in the pager control
+            this.ui_loader = true;
+            var tempSearchParams = localStorage.getItem('localStorageValue');
+            let searchParams = JSON.parse(tempSearchParams);
+            this.model = searchParams;
+            searchParams['pageStartIndex'] = this.startIndex;
+            searchParams['pageEndIndex'] = this.endIndex;
+            // console.log(this.model);
+            this.showtable = this.mainForm.valid ? "inline" : "none";
+            this.displayddl = this.mainForm.valid ? "none" : "block";
+            this.showalert = this.mainForm.valid ? "none" : "inline";
+
+            this.http
+                .post(this.urlName + '/services/basicSearch', searchParams)
+                .subscribe(upcData => {
+                    console.log(upcData);
+                    let upcDataResponse: any = upcData;
+                    
+                    this.responseCode = JSON.parse(upcDataResponse._body)['code'];
+                    this.errormsg = JSON.parse(upcDataResponse._body)['message'];
+                    if( JSON.parse(upcDataResponse._body)['upcItemsDto'] !== null ) {                    	
+                    	this.tableData = JSON.parse(upcDataResponse._body)['upcItemsDto'];
+                    	this.copyResponseData = JSON.parse(upcDataResponse._body)['upcItemsDto'];                        	
+                    	this.updateTableModifedData();
+                    	this.plusMinusColorChange();
+                    	console.log(this.tableData);
+                    } else {
+                    	this.tableData = [];
+                    	this.copyResponseData = [];
+                    	
+                    }  
+                    
+                 // to reset scrolling position of tables                    
+                    document.getElementById('table-container1').scrollLeft = document.getElementById('table-container2').scrollLeft = document.getElementById('table-container3').scrollLeft = document.getElementById('table-container4').scrollLeft = 0;
+                    document.getElementById('table-container1').scrollTop = document.getElementById('table-container2').scrollTop = document.getElementById('table-container3').scrollTop = document.getElementById('table-container4').scrollTop = 0; 
+                    
+
+                    if (action == "save") {
+                        document.getElementById('saveBtn').click();
+                        this.savecancelDisabled = true;
+                    }
+                  
+                    this.ui_loader = false;
+                }, error => {
+                    console.log(error.json());
+                    this.ui_loader = false;
+                    document.getElementById("exceptionerror").click();
+
+                });
+
+            if (this.currentPage == 1) {
+                this.firstPage = false;
+            } else {
+                this.firstPage = true;
+            }
+
+            if (this.endPage === this.currentPage) {
+                this.pageHide = false;
+            } else {
+                this.pageHide = true;
+            }
+        }
+
+        selectLast() {
+            console.log("calling Last method////////////////");
+
+        }
+        pages: any[] = [{
+            id: 0,
+            name: '0'
+        }];
+
+        pagecounts: any[] = [{
+            id: 50,
+            name: '50 per page'
+        }, {
+            id: 100,
+            name: '100 per page'
+        }, ];
+        exports: any[] = [{
+            id: 1,
+            name: 'Export'
+        },{
+            id: 2,
+            name: 'Export New'
+        }, {
+            id: 3,
+            name: 'Export All'
+        }, ];
+
+        attrexports: any[] = [{
+            id: 1,
+            name: 'Export'
+        },{
+            id: 2,
+            name: 'Export New'
+        },]; 
+
+        icfc: any[] = [{
+            id: 4,
+            name: 'IC'
+        }, {
+            id: 5,
+            name: 'FC'
+        }, ];
+
+    }
+

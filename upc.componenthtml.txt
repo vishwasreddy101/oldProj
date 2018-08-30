@@ -1,0 +1,1690 @@
+<div class="container">
+<!--Basic and Advanced Search Begins -->
+	<div class="expandButton">
+		
+		<button type="button" class="btn btn-default font13 pull-left identificationBtn" (click)="onSelect()" data-target="#upc">UPC-Items Identification
+			<span [ngClass]="(showDropDown)?'glyphicon glyphicon-chevron-down buttonIconExpand':'glyphicon glyphicon-chevron-right buttonIconExpand'"></span>
+		</button>
+	</div>
+	<form [formGroup]="mainForm" (ngSubmit)="find_filter(mainForm.value)">
+		<div class="seachBG">
+			<div class="whiteBG">
+				<div id="upc" class="seachwhiteBG collapse in" [ngStyle]="{display:displayddl}">
+					<div class="row font12 ddBtn mT5 containerMinHeight" style="">
+						<div class="col-lg-5ths">
+							<div class="searchFieldLabel">Country Code</div>
+							<div class="btn-group">
+									<select class="btn btn-default dropdown-toggle ui fluid search selection dropdown" [(ngModel)]="ctryCd" formControlName="ctryCd" #categoriesCtrl (ngModelChange)="onChangecategory($event)" required>
+										<option [hidden]="true" *ngIf="!ctryCd" [ngValue]=""></option>
+										<option *ngFor="let country of countrycode" [attr.value]="country.ctryCd">{{country.ctryCd}}</option>
+									</select>
+									<p *ngIf="mainForm.controls.ctryCd.errors?.required && isFindClicked" style="color: red; font-weight:bold;">Country Code is Required</p>
+							</div>
+						</div>
+						<div class="col-lg-5ths">
+							<div class="searchFieldLabel">Retailer</div>
+							<div class="btn-group">
+									<select class="btn btn-default dropdown-toggle" formControlName="retId" #retailsCtrl [(ngModel)]="retId"   (ngModelChange)="onChangeretail($event)">
+										<option [hidden]="true" *ngIf="!retId" [ngValue]=""></option>
+										<option *ngFor="let retId of retails" [value]="retId.retId">{{retId.retAbbrTxt }}</option>
+										<option *ngIf="ctryCd =='US'&& retailerFlag" [value]="-12700">WM US VMP</option>	
+									</select>
+									<p *ngIf="mainForm.controls.retId.errors?.required && isFindClicked" style="color: red; font-weight:bold;">Retailer Code is Required</p>
+							</div>
+						</div>
+						<div class="col-lg-5ths">
+							<div class="searchFieldLabel">Vendor Nbr</div>
+							<input type="text" class="form-control col-xs-2" formControlName="vend_nbr" id="vend_nbr" [(ngModel)]="vend_nbr"/>
+							<label><control-messages [control]="mainForm.controls.vend_nbr"></control-messages></label> 
+						</div>
+						<div class="col-lg-5ths"></div>
+						<div class="col-lg-5ths"></div>
+						<div id="advancedSearch" [ngStyle]="{display:displayddl1}">
+							<div class="row font12 ddBtn mT5">
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">UPC</div>
+									<input type="text" class="form-control col-xs-2" formControlName="upc" id="upc" [(ngModel)]="upc" /> 
+									<label><control-messages [control]="mainForm.controls.upc"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Item Nbr</div>
+									<input type="text" class="form-control col-xs-2" formControlName="item_nbr" id="item_nbr" [(ngModel)]="item_nbr"/> 
+									<label> <control-messages [control]="mainForm.controls.item_nbr"></control-messages></label>
+								</div>
+							</div>
+							<div class="row ddBtn mT5  font12">
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Item Desc 1</div>
+									<input type="text" class="form-control col-xs-2" formControlName="item_desc_1" id="item_desc_1"	[(ngModel)]="item_desc_1">
+									 <label> <control-messages [control]="mainForm.controls.item_desc_1"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Item Desc 2</div>
+									<input type="text" class="form-control col-xs-2" formControlName="item_desc_2" id="item_desc_2" [(ngModel)]="item_desc_2">
+									 <label> <control-messages [control]="mainForm.controls.item_desc_2"></control-messages> </label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Size Desc</div>
+									<input type="text" class="form-control col-xs-2" formControlName="size_desc" id="size_desc"	[(ngModel)]="size_desc"> 
+									<label> <control-messages [control]="mainForm.controls.size_desc"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">VNPK Qty</div>
+									<input type="text" class="form-control col-xs-2" formControlName="vnpk_qty" id="vnpk_qty" [(ngModel)]="vnpk_qty"> 
+									<label> <control-messages [control]="mainForm.controls.vnpk_qty"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">WM Accting Dept Nbr</div>
+									<input type="text" class="form-control col-xs-2" formControlName="wm_acting_deptnum" id="wm_acting_deptnum" [(ngModel)]="wm_acting_deptnum"> 
+									<label><control-messages [control]="mainForm.controls.wm_acting_deptnum"></control-messages></label>
+								</div>
+							</div>
+							<div class="row ddBtn mT5 font12">
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Fineline Nbr</div>
+									<input type="text" class="form-control col-xs-2" formControlName="fineline_num" id="fineline_num" [(ngModel)]="fineline_num">
+									<label> <control-messages [control]="mainForm.controls.fineline_num"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">SKU Desc</div>
+									<input type="text" class="form-control col-xs-2" formControlName="sku_desc" id="sku_desc" [(ngModel)]="sku_desc"> 
+									<label> <control-messages [control]="mainForm.controls.sku_desc"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Package Group</div>
+									<input type="text" class="form-control col-xs-2" formControlName="package_group" id="package_group" [(ngModel)]="package_group">
+									 <label><control-messages [control]="mainForm.controls.package_group"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Category</div>
+									<input type="text" class="form-control col-xs-2" formControlName="category" id="category" [(ngModel)]="category">
+									 <label> <control-messages [control]="mainForm.controls.category"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Sub-Category</div>
+									<input type="text" class="form-control col-xs-2" formControlName="sub_category" id="sub_category" [(ngModel)]="sub_category">
+									<label><control-messages [control]="mainForm.controls.sub_category"></control-messages></label>
+								</div>
+							</div>
+							<div class="row ddBtn mT5 font12">
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Brand</div>
+									<input type="text" class="form-control col-xs-2" formControlName="brand" id="brand" [(ngModel)]="brand">
+									<label><control-messages [control]="mainForm.controls.brand"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Flavor</div>
+									<input type="text" class="form-control col-xs-2" formControlName="flavor" id="flavor" [(ngModel)]="flavor">
+									<label><control-messages [control]="mainForm.controls.flavor"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Unit Size</div>
+									<input type="text" class="form-control col-xs-2" formControlName="unit_size" id="unit_size"	[(ngModel)]="unit_size"> 
+									<label><control-messages [control]="mainForm.controls.unit_size"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Retail Pack Qty</div>
+									<input type="text" class="form-control col-xs-2" formControlName="retailpack_quantity" id="retailpack_quantity" [(ngModel)]="retailpack_quantity">
+									<label> <control-messages [control]="mainForm.controls.retailpack_quantity"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Package Material</div>
+									<input type="text" class="form-control col-xs-2" formControlName="package_material" id="package_material" [(ngModel)]="package_material">
+									 <label> <control-messages [control]="mainForm.controls.package_material"></control-messages></label>
+								</div>
+							</div>
+							<div class="row ddBtn mT5 font12">
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Supplier</div>
+									<input type="text" class="form-control col-xs-2" formControlName="supplier" id="supplier" [(ngModel)]="supplier"> 
+									<label><control-messages [control]="mainForm.controls.supplier"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">IC/FC</div>
+									<div class="btn-group">
+										<select class="btn btn-default dropdown-toggle" formControlName="ic_fc" id="ic_fc" [ngModel]="selectedicfc"	#icfcCtrl (ngModelChange)="onChangeicfc($event)">
+											<option [ngValue]="">-</option>
+											<option *ngFor="let ic of icfc" [ngValue]="">{{ic.name}}</option>
+										</select>
+									</div>
+									<label><control-messages [control]="mainForm.controls.ic_fc"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Calorie Content</div>
+									<input type="text" class="form-control col-xs-2" formControlName="calorie_content" id="calorie_content" [(ngModel)]="calorie_content"> 
+									<label> <control-messages [control]="mainForm.controls.calorie_content"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Unit Case Conversion</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute14" id="localAttribute14"	[(ngModel)]="localAttribute14"> 
+									<label> <control-messages [control]="mainForm.controls.localAttribute14"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths">
+									<div class="searchFieldLabel">Liters</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute15" id="localAttribute15" [(ngModel)]="localAttribute15"> 
+									<label>	<control-messages [control]="mainForm.controls.localAttribute15"></control-messages></label>
+								</div>
+							</div>
+							<div>
+								<input type="hidden" class="form-control col-xs-2" formControlName="ko_item" [value]="y" id="ko_item" [(ngModel)]="ko_item">
+							</div>
+							<div class="row ddBtn mT5 font12">
+								<div class="col-lg-5ths height50 row" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 9</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute9" id="localAttribute9" [(ngModel)]="localAttribute9">
+									<label><control-messages [control]="mainForm.controls.localAttribute9"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 10</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute10" id="localAttribute10" [(ngModel)]="localAttribute10">
+									<label><control-messages [control]="mainForm.controls.localAttribute10"></control-messages></label>
+								</div> 
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 11</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute11" id="localAttribute11" [(ngModel)]="localAttribute11">
+									<label><control-messages [control]="mainForm.controls.localAttribute11"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 12</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute12" id="localAttribute12" [(ngModel)]="localAttribute12">
+									<label><control-messages [control]="mainForm.controls.localAttribute12"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 13</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute13" id="localAttribute13" [(ngModel)]="localAttribute13"> 
+									<label><control-messages [control]="mainForm.controls.localAttribute13"></control-messages></label>
+								</div>
+							<!-- </div>
+							<div class="row ddBtn mT5 font12"> -->
+								<!-- <div class="col-lg-5ths height50">
+									<div class="searchFieldLabel">Product Local Attribute 14</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute14" id="localAttribute14" [(ngModel)]="localAttribute14">
+									 <label><control-messages [control]="mainForm.controls.localAttribute14"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50">
+									<div class="searchFieldLabel">Product Local Attribute 15</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute15" id="localAttribute15" [(ngModel)]="localAttribute15">
+									<label><control-messages [control]="mainForm.controls.localAttribute15"></control-messages></label>
+								</div> -->
+								<div class="col-lg-5ths height50"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1">
+									<div class="searchFieldLabel" >Product Local Attribute 16</div>
+									<input type="text"  class="form-control col-xs-2" formControlName="localAttribute16" id="localAttribute16" [(ngModel)]="localAttribute16"> 
+									<label><control-messages [control]="mainForm.controls.localAttribute16"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 17</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute17" id="localAttribute17" [(ngModel)]="localAttribute17">
+									<label><control-messages [control]="mainForm.controls.localAttribute17"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 18</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute18" id="localAttribute18" [(ngModel)]="localAttribute18">
+									<label><control-messages [control]="mainForm.controls.localAttribute18"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 19</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute19" id="localAttribute19" [(ngModel)]="localAttribute19">
+									<label><control-messages [control]="mainForm.controls.localAttribute19"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 20</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute20" id="localAttribute20" [(ngModel)]="localAttribute20">
+									<label><control-messages [control]="mainForm.controls.localAttribute20"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 21</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute21" id="localAttribute21" [(ngModel)]="localAttribute21">
+									<label><control-messages [control]="mainForm.controls.localAttribute21"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 22</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute22" id="localAttribute22" [(ngModel)]="localAttribute22">
+									<label><control-messages [control]="mainForm.controls.localAttribute22"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 23</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute23" id="localAttribute23" [(ngModel)]="localAttribute23">
+									<label><control-messages [control]="mainForm.controls.localAttribute23"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 24</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute24" id="localAttribute24" [(ngModel)]="localAttribute24">
+									 <label><control-messages [control]="mainForm.controls.localAttribute24"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 25</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute25" id="localAttribute25" [(ngModel)]="localAttribute25"> 
+									<label><control-messages [control]="mainForm.controls.localAttribute25"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 26</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute26" id="localAttribute26" [(ngModel)]="localAttribute26"> 
+									<label><control-messages [control]="mainForm.controls.localAttribute26"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 27</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute27" id="localAttribute27" [(ngModel)]="localAttribute27"> 
+									<label><control-messages [control]="mainForm.controls.localAttribute27"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 28</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute28" id="localAttribute28" [(ngModel)]="localAttribute28">
+									 <label><control-messages [control]="mainForm.controls.localAttribute28"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 29</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute29" id="localAttribute29" [(ngModel)]="localAttribute29">
+									 <label><control-messages [control]="mainForm.controls.localAttribute29"></control-messages></label>
+								</div>
+								<div class="col-lg-5ths height50" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1">
+									<div class="searchFieldLabel">Product Local Attribute 30</div>
+									<input type="text" class="form-control col-xs-2" formControlName="localAttribute30" id="localAttribute30" [(ngModel)]="localAttribute30">
+									<label><control-messages [control]="mainForm.controls.localAttribute30"></control-messages></label>
+								</div>
+							</div>
+					
+						</div>
+					</div>
+					<div class="row mT10">
+						<div class="row mT10">
+							<button type="reset" value="Reset" (click)="clearSearch()" class="btn btn-warning mL10">Reset</button>
+							<div class="pull-right">
+								<div class="pull-left padT5 font12 mR10">
+									<button type="button" class="btn-link" (click)="onSelectExpand()">{{searchval}}</button>
+									<button type="submit" class="btn btn-info pull-right mR10">Find</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+<!--Basic and Advanced Search Ends -->
+<!--Search Result Display Begins -->
+	<div class="first" style="align-text: center" *ngIf="ui_loader">
+		<img style="margin: 20% 46%;" src="assets/images/header/Rolling (1).gif" alt="loader">
+	</div>
+	<div [ngStyle]="{display:showtable}">
+		<div class="row greygradiant">
+			<div class="pull-left"  *ngIf="attrbuttonhide">
+				<button [ngClass]="(koStatus==='N')?'btn btn-default pull-left mR10 underlineButton':'btn btn-default pull-left mR10'" (click)="onko('Y')" type="button">
+					<b>KO Items</b>
+				</button>
+				<button *ngIf="koButtonHide" [ngClass]="(koStatus==='N')?'btn btn-default pull-left mR10':'btn btn-default pull-left mR10 underlineButton'" (click)="onko('N')" type="button">
+					<b>Non-KO Items</b>
+				</button>
+			</div>
+			<div class="pull-left"  *ngIf="!attrbuttonhide">
+				<button class="btn btn-default pull-left mR10" type="button">
+					<b>US VMP</b>
+				</button>
+				
+			</div>
+			<div class="pull-right" *ngIf="responseCode !== '202'">
+					<select *ngIf="attrbuttonhide" class="btn btn-default pull-left mR10 pagDD font12" [ngModel]="selectedexport" #exportCtrl (ngModelChange)="onChangeexport($event)">
+							<option [hidden]="true" value="0">Select</option>
+							<option *ngFor="let export of exports" [ngValue]="export.id">{{export.name}}</option>
+						</select> 
+						<select *ngIf="!attrbuttonhide" class="btn btn-default pull-left mR10 pagDD font12" [ngModel]="selectedexport" #exportCtrl (ngModelChange)="onChangeexport($event)">
+								<option [hidden]="true" value="0">Select</option>
+								<option *ngFor="let export of attrexports" [ngValue]="export.id">{{export.name}}</option>
+						</select>
+				<label class="btn btn-default" for="upload-file-selector">
+					<input id="upload-file-selector" #uploadFile type="file" (change)="fileChange($event)" accept=".xls,.xlsx"><i class=""></i>Mass Upload
+				</label>
+				<label [hidden]="true" id="massuploadBtn" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#massupload"></label>
+				<label [hidden]="true" id="uploaderr" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#uploaderror"></label>
+				<label [hidden]="true" id="notifypartial" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#partialnotify"></label>
+				
+				<button [hidden]="true" id="saveBtn" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#save"></button>
+				<button [hidden]="true" id="exceptionerror" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#exception"></button>
+			</div>
+		</div>
+		<div class=" row lightgreyGradiant " *ngIf="tableData.length">
+			<div class="pull-left">
+				<button class="btn btn-default pull-left mR10" type="button" (change)="isSelected =false" [disabled]="copyDisabled()" (click)="copy_Clicked()">Copy</button>
+				<button class="btn btn-default pull-left mR10" type="button"  data-backdrop="static" data-keyboard="false" [disabled]="paste_pasteall_disabled()" (click)="paste_Clicked()" data-toggle="modal" data-target="#myModal">Paste</button>
+				<button class="btn btn-default pull-left mR10" type="button"  *ngIf="attrbuttonhide" data-backdrop="static" data-keyboard="false" [disabled]="paste_pasteall_disabled()" (click)="paste_All_Clicked()" data-toggle="modal"	data-target="#pasteALL">Paste All</button>
+				<button class="btn btn-default pull-left mR10" *ngIf="firstPage" type="button" (click)="selectPage('First')">First</button>
+				<button class="btn btn-default pull-left mR10" *ngIf="firstPage" type="button" (click)="selectPage('Previous')">Previous</button>
+				<select class="pull-left mR10 pagDD font12" [ngModel]="currentPage" #pageCtrl (ngModelChange)="onChangepage($event)">
+					<option *ngFor="let page of pages" [ngValue]="page.id">{{page.name}}</option>
+				</select> 
+				<span class="mR10 pull-left mT4 font12">of {{endPage}} </span>
+				<button class="btn btn-default pull-left mR10" *ngIf="pageHide"	type="button" (click)="selectPage('Next')">Next</button>
+				<button class="btn btn-default pull-left mR10" *ngIf="pageHide"	type="button" (click)="selectPage('Last')">Last</button>
+				<select class="pull-left pagDD font12 mR10"	[(ngModel)]="selectedpagecount"	#pagecountCtrl (ngModelChange)="onChangepgcnt($event)">
+						<option *ngFor="let pagecount of pagecounts" [ngValue]="pagecount.id">{{pagecount.name}}</option>
+				</select>
+			</div>
+			<div class="pull-right">
+				<button class="btn btn-default pull-left mR10" type="button" [disabled]="savecancelDisabled" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#cancel">Cancel</button>
+				<button class="btn btn-default pull-left" [disabled]="savecancelDisabled"  data-backdrop="static" data-keyboard="false" (click)="save_UPC_Data()">Save</button>
+			</div>
+		</div>
+
+<!-- Table Code Begins -->		
+	<div class="tableMainWrapper">
+		<div class="width40" id="table-container1">
+			<table class="retailLinkTable">
+				<thead>
+					<tr><th colspan="10" class="blueheadergradiant">Retail Link Information</th></tr>
+					<tr>
+						<th class="blueBG column-1"><div class="pull-left plusIcon"></div> 
+							<input type="checkbox" *ngIf="tableData.length"  [disabled]="tableheaderdisable()"  [ngModel]="tableheadercheckbox" (click)="tableHeader_Checkbox_Clicked(tableheadercheckbox = !tableheadercheckbox)" >						</th>
+						<th title='country' class=" blueBG column0">Country</th>
+						<th title='Retailer' class="blueBG column1">Retailer</th>
+						<th title='UPC' class="blueBG column2">UPC</th>
+						<th title='Item Nbr' class="blueBG column3">Item Nbr</th>
+						<th title='Item Desc 1' class="blueBG column4">Item Desc 1</th>
+						<th title='Item Desc 2' class="blueBG column5">Item Desc 2</th>
+						<th title='Vend Nbr' class="blueBG column6">Vend Nbr</th>
+						<th title='Size Desc' class="blueBG column7">Size Desc</th>
+						<th title='VNPK Qty' class="blueBG column8">VNPK Qty</th>
+						<th title='WM Accting Dept Nbr' class="blueBG column9">WM Accting <br>Dept Nbr</th>
+						<th title='Fineline Nbr' class="blueBG column10">Fineline <br>Nbr</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="width60" id="table-container2">
+			<table class="localValuesTable" [style.width.px]="varriedLocalTablewidthLocal">
+				<thead>
+					<tr style="border-bottom: 1px solid #fff">
+					    <th [colSpan]="UpcLocalAttributeData.length + 14" class="greenheadergradiant">Local Values</th>
+						<th colspan="4" class="pinkheadergradiant">Retail Sales	Totals (Walmart Year)</th>
+					</tr>
+					<tr>
+					   <th title='SKU Desc' class="greenBG column11">SKU Desc</th>
+					   <th title='Package Group' class="greenBG column12">Package Group</th>
+					   <th title='Category' class="greenBG column13">Category</th>
+					   <th title='Sub-Category' class="greenBG column14">Sub-Category</th>
+					   <th title='Brand' class="greenBG column15">Brand</th>
+					   <th title='Flavor' class="greenBG column16">Flavor</th>
+				       <th title='Unit Size' class="greenBG column17">Unit Size</th>
+					   <th title='Retail Pack Qty' class="greenBG column18">Retail	Pack Qty</th>
+					   <th title='Package Material' class="greenBG column19">Package Material</th>
+					   <th title='Supplier' class="greenBG column20">Supplier</th>
+					   <th title=' IC/FC' class="greenBG column21">IC/FC</th>
+					   <th title='Calorie Content' class="greenBG column22">Calorie Content</th>
+					   <th title='Unit Case Conversion' class="greenBG column23">Unit Case <br>Conversion</th>
+					   <th title='Liters' class="greenBG column24">Liters</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1" title='Product Local Attribute 9' class="greenBG columnWidth110">Product Local <br />Attribute 9</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1" title='Product Local Attribute 10' class="greenBG columnWidth110">Product Local <br />Attribute 10</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1" title='Product Local Attribute 11' class="greenBG columnWidth110">Product Local <br />Attribute 11</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1" title='Product Local Attribute 12' class="greenBG columnWidth110">Product Local <br />Attribute 12</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1" title='Product Local Attribute 13' class="greenBG columnWidth110">Product Local <br />Attribute 13</th>
+					   <!-- <th title='Product Local Attribute 14' class="greenBG columnWidth110">Product Local <br />Attribute 14</th>
+					   <th title='Product Local Attribute 15' class="greenBG columnWidth110">Product Local <br />Attribute 15</th> -->
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1" title='Product Local Attribute 16' class="greenBG columnWidth110">Product Local <br />Attribute 16</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1" title='Product Local Attribute 17' class="greenBG columnWidth110">Product Local <br />Attribute 17</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1" title='Product Local Attribute 18' class="greenBG columnWidth110">Product Local <br />Attribute 18</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1" title='Product Local Attribute 19' class="greenBG columnWidth110">Product Local <br />Attribute 19</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1" title='Product Local Attribute 20' class="greenBG columnWidth110">Product Local <br />Attribute 20</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1" title='Product Local Attribute 21' class="greenBG columnWidth110">Product Local <br />Attribute 21</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1" title='Product Local Attribute 22' class="greenBG columnWidth110">Product Local <br />Attribute 22</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1" title='Product Local Attribute 23' class="greenBG columnWidth110">Product Local <br />Attribute 23</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1" title='Product Local Attribute 24' class="greenBG columnWidth110">Product Local <br />Attribute 24</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1" title='Product Local Attribute 25' class="greenBG columnWidth110">Product Local <br />Attribute 25</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1" title='Product Local Attribute 26' class="greenBG columnWidth110">Product Local <br />Attribute 26</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1" title='Product Local Attribute 27' class="greenBG columnWidth110">Product Local <br />Attribute 27</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1" title='Product Local Attribute 28' class="greenBG columnWidth110">Product Local <br />Attribute 28</th>
+					   <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1" title='Product Local Attribute 29' class="greenBG columnWidth110">Product Local <br />Attribute 29</th>
+				       <th *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1" title='Product Local Attribute 30' class="greenBG columnWidth110">Product Local <br />Attribute 30</th>
+					   <th title='2-YAGO Sales' class="pinkBG column36">2-YAGO	Sales</th>
+					   <th title='YAGO Sales' class="pinkBG column37">YAGO Sales</th>
+					   <th title='Current Year Sales' class="pinkBG column38">Current Year <br>Sales</th>
+					   <th title='Total Sales' class="pinkBG" style="vertical-align: top; width:113px">Total Sales</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		
+		<div class="scroolable">
+			<div class="width40" id="table-container3" (scroll)="onElementScrollHorizental($event)">
+				<table class="retailLinkTable">
+					<tr *ngIf="errormsg && !tableData.length">
+						<td colspan="10" >
+							<div class="errorrText text_left"></div>
+						</td>
+					</tr>
+					<tbody *ngIf="tableData.length" style="overflow-y: auto;">
+						
+						<ng-template let-item ngFor [ngForOf]="tableData" let-i="index">
+							<tr>
+								<td class="column-1">
+									<div class="pull-left plusIcon">
+										<a><span [ngClass]="(item.isPlusMinusColor===false)?'glyphicon glyphicon-plus':'glyphicon glyphicon-plus colorY'" *ngIf="item.items != null && item.items.length>0 && ExpandChildArray.indexOf(item.id) == -1"  (click)="expandPlusRow(item.id)"></span>
+										   <span [ngClass]="(item.isPlusMinusColor===false)?'glyphicon glyphicon-minus':'glyphicon glyphicon-minus colorY'" *ngIf="ExpandChildArray.length >0 && ExpandChildArray.indexOf(item.id) >-1 "  (click)="expandMinusRow(item.id)"></span>
+										 </a>
+									</div> 
+									<input  type="checkbox" [(ngModel)]="item.rowCheckbox" (change)="row_Checkbox_Clicked(i,item)" value="">
+								</td>
+								<td class="column0" title={{selectedcategory}}><span class="whiteSpacepre">{{selectedcategory}}</span></td>
+								<td class="column1" title={{retailname}}><span class="whiteSpacepre">{{retailname}}</span></td>
+								<td class="column2" title={{item.upc}}><span class="whiteSpacepre">{{item.upc}}</span></td>
+								<td class="column3" title={{item.item_nbr}}><span class="whiteSpacepre">{{item.item_nbr}}</span></td>
+								<td class="column4" title={{item.item_desc_1}}><span class="whiteSpacepre">{{item.item_desc_1}}</span></td>
+								<td class="column5" title={{item.item_desc_2}}><span class="whiteSpacepre">{{item.item_desc_2}}</span></td>
+								<td class="column6" title={{item.vend_nbr}}><span class="whiteSpacepre">{{item.vend_nbr}}</span></td>
+								<td class="column7" title={{item.size_desc}}><span class="whiteSpacepre">{{item.size_desc}}</span></td>
+								<td class="column8" title={{item.vnpk_qty}}><span class="whiteSpacepre">{{item.vnpk_qty}}</span></td>
+								<td class="column9" title={{item.wm_acting_deptnum}}><span class="whiteSpacepre">{{item.wm_acting_deptnum}}</span></td>
+								<td class="column10" title={{item.fineline_num}}><span class="whiteSpacepre">{{item.fineline_num}}</span></td>
+							</tr>
+							<tr class="subrow" *ngFor="let x of item.items ;"let y = index >
+							 
+							
+								<td *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">
+								<!-- <div class="pull-left plusIcon"></div>
+								  <input *ngIf="x.exception===true && ExpandChildArray.indexOf(item.id) > -1" type="checkbox"  [(ngModel)]="x.rowCheckbox" (change)="row_Checkbox_Clicked(y,x)" value="">
+								</td> -->
+								<td class="column2" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'"></td>
+								<td class="column3" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.item_nbr}}</td>
+								<td class="column4" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.item_desc_1}}</td>
+								<td class="column5" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.item_desc_2}}</td>
+								<td class="column6" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.vend_nbr}}</td>
+								<td class="column7" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.size_desc}}</td>
+								<td class="column8" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.vnpk_qty}}</td>
+								<td class="column9" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.wm_acting_deptnum}}</td>
+								<td class="column10" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.fineline_num}}</td>
+							</tr>
+						</ng-template>
+					</tbody>
+				</table>
+			</div>
+			<div class="width60" id="table-container4" (scroll)="onElementScroll()">
+				<table class="localValuesTable localValueDDBtn" [style.width.px]="varriedLocalTablewidth">
+					<tr *ngIf="errormsg && !tableData.length">
+						<td [colSpan]="UpcLocalAttributeData.length + 23">						
+							<div class="errorrText text_left">{{errormsg}}</div>
+						</td>
+					</tr>
+					<tbody *ngIf="tableData.length">
+						<ng-template let-item ngFor [ngForOf]="tableData" let-i="index">
+							<tr id="row" [ngClass]="{'pointerNone': i == selectedRow}" #row (dblclick)="setClickedRow(i,'','parent',item)">							
+								<td class="column11"  title={{item.sku_desc}}><span class="whiteSpacepre">{{item.sku_desc ? item.sku_desc :  placeHolder}}</span></td>
+								<td class="column12"  title={{item.package_group}}><span class="whiteSpacepre">{{item.package_group ? item.package_group :  placeHolder}}</span></td>
+								<td class="column13"  *ngIf=" i != selectedRow" title={{item.category}}>																
+									<i type="text" maxlength="10" *ngIf="item.updatedValues.indexOf('category') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.category ? item.category :  placeHolder}}</span>
+								</td>								
+								<td class="column13 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent  [maxLengthInput]="50" [itemList]="editListrow4" [query]="item.category" (valueSelected)="update_Edit_DropDown(item.id,'category',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								<td *ngIf=" i != selectedRow" title={{item.sub_category}} class="column14">
+									<i *ngIf="item.updatedValues.indexOf('sub_category') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.sub_category ? item.sub_category :  placeHolder}}</span>
+								</td>
+								<td class="column14 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow0" [query]="item.sub_category" (valueSelected)="update_Edit_DropDown(item.id,'sub_category',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>									
+								</td>
+								<td class="column15"  *ngIf=" i != selectedRow" title={{item.brand}} >
+									<i *ngIf="item.updatedValues.indexOf('brand') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre">{{item.brand ? item.brand :  placeHolder}}</span>
+								</td>
+								<td class="column15 overflowUnset" *ngIf=" i === selectedRow">
+								    <app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow3" [query]="item.brand" (valueSelected)="update_Edit_DropDown(item.id,'brand',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>	
+								</td>
+								<td class="column16"   *ngIf=" i != selectedRow" title={{item.flavor}}>
+									<i *ngIf="item.updatedValues.indexOf('flavor') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.flavor ? item.flavor :  placeHolder}}</span>
+								</td>
+								<td class="column16 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow6" [query]="item.flavor" (valueSelected)="update_Edit_DropDown(item.id,'flavor',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>	
+								</td>
+								<td class="column17"   *ngIf=" i != selectedRow" title={{item.unit_size}}>
+									<i *ngIf="item.updatedValues.indexOf('unit_size') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.unit_size ? item.unit_size :  placeHolder}}</span>
+								</td>
+								<td class="column17 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow1" [query]="item.unit_size" (valueSelected)="update_Edit_DropDown(item.id,'unit_size',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>	
+								</td>
+								<td class="column18"  *ngIf=" i != selectedRow" title={{item.retailpack_quantity}}>
+									<i *ngIf="item.updatedValues.indexOf('retailpack_quantity') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.retailpack_quantity ? item.retailpack_quantity :  placeHolder}}</span>
+								</td>
+								<td class="column18 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow7" [query]="item.retailpack_quantity"  (valueSelected)="update_Edit_DropDown(item.id,'retailpack_quantity',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="column19"  *ngIf=" i != selectedRow" title={{item.package_material}}>
+									<i *ngIf="item.updatedValues.indexOf('package_material') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.package_material ? item.package_material :  placeHolder}}</span>
+								</td>
+								<td class="column19 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow8" [query]="item.package_material" (valueSelected)="update_Edit_DropDown(item.id,'package_material',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="column20"  *ngIf=" i != selectedRow" title={{item.supplier}}>
+									<i *ngIf="item.updatedValues.indexOf('supplier') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.supplier ? item.supplier : placeHolder}}</span>
+								</td>
+								<td class="column20 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow9" [query]="item.supplier" (valueSelected)="update_Edit_DropDown(item.id,'supplier',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="column21"  *ngIf=" i != selectedRow" title={{item.ic_fc}}>
+									<i *ngIf="item.updatedValues.indexOf('ic_fc') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.ic_fc ? item.ic_fc :  placeHolder}}</span>
+								</td>
+								<td class="column21 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow10" [query]="item.ic_fc" (valueSelected)="update_Edit_DropDown(item.id,'ic_fc',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="column22"  *ngIf=" i != selectedRow" title={{item.calorie_content}}>
+									<i *ngIf="item.updatedValues.indexOf('calorie_content') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre alignleft"> {{item.calorie_content ? item.calorie_content :  placeHolder}}</span>
+								</td>
+								<td class="column22 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow11" [query]="item.calorie_content" (valueSelected)="update_Edit_DropDown(item.id,'calorie_content',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="column23"  title={{item.localAttribute14}}><span class="whiteSpacepre">{{item.localAttribute14 ? item.localAttribute14 : placeHolder}}</span></td>
+								<td class="column24"  title={{item.localAttribute15}}><span class="whiteSpacepre">{{item.localAttribute15 ? item.localAttribute15 : placeHolder}}</span></td>
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1 && i != selectedRow" title={{item.localAttribute9}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute9') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute9 ? item.localAttribute9 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow12" [query]="item.localAttribute9" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute9',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1 && i != selectedRow" title={{item.localAttribute10}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute10') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute10 ? item.localAttribute10 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow13" [query]="item.localAttribute10" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute10',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1 && i != selectedRow" title={{item.localAttribute11}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute11') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.localAttribute11 ? item.localAttribute11 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow14" [query]="item.localAttribute11" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute11',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1 && i != selectedRow" title={{item.localAttribute12}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute12') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre"> {{item.localAttribute12 ? item.localAttribute12 :  placeHolder}}</span>
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow15" [query]="item.localAttribute12" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute12',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>		
+								</td>
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1 && i != selectedRow" title={{item.localAttribute13}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute13') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute13 ? item.localAttribute13 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow16" [query]="item.localAttribute13" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute13',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								<!-- <td class="columnWidth110" *ngIf=" i != selectedRow" title={{item.localAttribute14}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute14') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{item.localAttribute14 ? item.localAttribute14 :  placeHolder}}
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [itemList]="editListrow56" [query]="item.localAttribute14" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute14',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>	
+								</td>								
+								<td class="columnWidth110" *ngIf=" i != selectedRow" title={{item.localAttribute15}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute15') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{item.localAttribute15 ? item.localAttribute15 :  placeHolder}}
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf=" i === selectedRow">
+									<app-autocompletecomponent [itemList]="editListrow57" [query]="item.localAttribute15" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute15',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td> -->
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1 && i != selectedRow" title={{item.localAttribute16}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute16') > -1" class="glyphicon glyphicon-triangle-right highlight"></i>  <span class="whiteSpacepre">{{item.localAttribute16 ? item.localAttribute16 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow58" [query]="item.localAttribute16" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute16',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>	
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1 && i != selectedRow" title={{item.localAttribute17}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute17') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.localAttribute17 ? item.localAttribute17 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow59" [query]="item.localAttribute17" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute17',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1 && i != selectedRow" title={{item.localAttribute18}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute18') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute18 ? item.localAttribute18 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow60" [query]="item.localAttribute18" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute18',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"   *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1 && i != selectedRow" title={{item.localAttribute19}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute19') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.localAttribute19 ? item.localAttribute19 :  placeHolder}}</span>
+								</td>
+							    <td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1 && i == selectedRow">
+							    	<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow61" [query]="item.localAttribute19" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute19',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+							    </td>
+							    
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1 && i != selectedRow" title={{item.localAttribute20}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute20') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre">{{item.localAttribute20 ? item.localAttribute20 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow62" [query]="item.localAttribute20" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute20',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1 && i != selectedRow" title={{item.localAttribute21}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute21') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute21 ? item.localAttribute21 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow63" [query]="item.localAttribute21" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute21',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1 && i != selectedRow" title={{item.localAttribute22}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute22') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.localAttribute22 ? item.localAttribute22 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow64" [query]="item.localAttribute22" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute22',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1 && i != selectedRow" title={{item.localAttribute23}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute23') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute23 ? item.localAttribute23 :  placeHolder}}</span>
+								</td>
+ 								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow65" [query]="item.localAttribute23" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute23',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>	
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1 && i != selectedRow" title={{item.localAttribute24}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute24') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.localAttribute24 ? item.localAttribute24 :  placeHolder}}</span>
+								</td>
+                                <td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1 && i == selectedRow">
+                                	<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow66" [query]="item.localAttribute24" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute24',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+                                </td>
+                                
+								<td class="columnWidth110"   *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1 && i != selectedRow" title={{item.localAttribute25}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute25') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.localAttribute25 ? item.localAttribute25 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow67" [query]="item.localAttribute25" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute25',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1 && i != selectedRow" title={{item.localAttribute26}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute26') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre">{{item.localAttribute26 ? item.localAttribute26 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow68" [query]="item.localAttribute26" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute26',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1 && i != selectedRow" title={{item.localAttribute27}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute27') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre alignleft"> {{item.localAttribute27 ? item.localAttribute27 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow69" [query]="item.localAttribute27" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute27',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1 && i != selectedRow" title={{item.localAttribute28}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute28') > -1" class="glyphicon glyphicon-triangle-right highlight"></i><span class="whiteSpacepre">{{item.localAttribute28 ? item.localAttribute28 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow70" [query]="item.localAttribute28" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute28',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1 && i != selectedRow" title={{item.localAttribute29}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute29') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute29 ? item.localAttribute29 :  placeHolder}}</span>
+								</td>
+
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1 && i == selectedRow"> 
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow71" [query]="item.localAttribute29" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute29',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="columnWidth110"  *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1 && i != selectedRow" title={{item.localAttribute30}}>
+									<i *ngIf="item.updatedValues.indexOf('localAttribute30') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> <span class="whiteSpacepre">{{item.localAttribute30 ? item.localAttribute30 :  placeHolder}}</span>
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1 && i == selectedRow">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow72" [query]="item.localAttribute30" (valueSelected)="update_Edit_DropDown(item.id,'localAttribute30',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>
+								</td>
+								
+								<td class="column36"  title={{item.yago}} align="right"> <span class="whiteSpacepre">{{item.yago}}</span></td>
+								<td class="column37"  title={{item.yagosales}} align="right"><span class="whiteSpacepre">{{item.yagosales}}</span></td>
+								<td class="column38"  title={{item.currentyear}} align="right"><span class="whiteSpacepre">{{item.currentyear}}</span></td>
+								<td class="column39"  title={{item.totalsales}} align="right"><span class="whiteSpacepre">{{item.totalsales}}</span></td>
+						    
+						    
+						    
+						    </tr>
+						    
+							<tr class="subrow" *ngFor="let x of item.items;let z = index" id="row1" [ngClass]="{'pointerNone': z == selectedChildRow}" #row1 (dblclick)="setClickedRow(z,item.id,'child',x)">
+								
+								<td class="column11" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.sku_desc}}</td>
+								<td class="column12" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.package_group}}</td>
+<!-- 								<td class="column13" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.category}}</td>
+ -->								
+ 
+ 
+                                <td class="column13" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.category}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('category') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.category ? x.category :  placeHolder}}
+								</td>								
+								<td class="column13 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow4" [query]="x.category" (valueSelected)="Update_child_Edit_DropDown(x.id,'category','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td> 
+                              
+                               <td class="column14" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.sub_category}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('sub_category') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.sub_category ? x.sub_category :  placeHolder}}
+								</td>								
+								<td class="column14 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow0" [query]="x.sub_category" (valueSelected)="Update_child_Edit_DropDown(x.id,'sub_category','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td> 
+								
+								 <td class="column15" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.brand}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('brand') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.brand ? x.brand :  placeHolder}}
+								</td>								
+								<td class="column15 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow3" [query]="x.brand" (valueSelected)="Update_child_Edit_DropDown(x.id,'brand','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								 <td class="column16" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.flavor}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('flavor') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.flavor ? x.flavor :  placeHolder}}
+								</td>								
+								<td class="column16 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow6" [query]="x.flavor" (valueSelected)="Update_child_Edit_DropDown(x.id,'flavor','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								 <td class="column17" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.unit_size}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('unit_size') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.unit_size ? x.unit_size :  placeHolder}}
+								</td>								
+								<td class="column17 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow1" [query]="x.unit_size" (valueSelected)="Update_child_Edit_DropDown(x.id,'unit_size','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+                              
+                               <td class="column18" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.retailpack_quantity}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('retailpack_quantity') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.retailpack_quantity ? x.retailpack_quantity :  placeHolder}}
+								</td>								
+								<td class="column18 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow7" [query]="x.retailpack_quantity" (valueSelected)="Update_child_Edit_DropDown(x.id,'retailpack_quantity','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+                              
+                               <td class="column19" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.package_material}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('package_material') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.package_material ? x.package_material :  placeHolder}}
+								</td>								
+								<td class="column19 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow8" [query]="x.package_material" (valueSelected)="Update_child_Edit_DropDown(x.id,'package_material','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="column20" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.supplier}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('supplier') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.supplier ? x.supplier :  placeHolder}}
+								</td>								
+								<td class="column20 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow9" [query]="x.supplier" (valueSelected)="Update_child_Edit_DropDown(x.id,'supplier','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="column21" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.ic_fc}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('ic_fc') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.ic_fc ? x.ic_fc :  placeHolder}}
+								</td>								
+								<td class="column21 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow10" [query]="x.ic_fc" (valueSelected)="Update_child_Edit_DropDown(x.id,'ic_fc','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="column22" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.calorie_content}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('calorie_content') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.calorie_content ? x.calorie_content:  placeHolder}}
+								</td>								
+								<td class="column22 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow11" [query]="x.calorie_content" (valueSelected)="Update_child_Edit_DropDown(x.id,'calorie_content','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<!-- <td class="column23" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.unitcase_conv}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" maxlength="10" *ngIf="x.updatedValues.indexOf('unitcase_conv') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.unitcase_conv ? x.unitcase_conv:  placeHolder}}
+								</td>								
+								<td class="column23 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  ">
+									<app-autocompletecomponent [itemList]="editListrow4" [query]="x.unitcase_conv" (valueSelected)="Update_child_Edit_DropDown(x.id,'unitcase_conv','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td> -->
+							      <td class="column23" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute14}}</td>
+								
+								<td class="column24" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute15}}</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute9}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute9') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute9 ? x.localAttribute9:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow12" [query]="x.localAttribute9" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute9','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+                                 
+                                 <td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute10}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute10') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute10 ? x.localAttribute10:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow13" [query]="x.localAttribute10" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute10','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								 <td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute11}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute11') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute11 ? x.localAttribute11:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow14" [query]="x.localAttribute11" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute11','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute12}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute12') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute12 ? x.localAttribute12:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow15" [query]="x.localAttribute12" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute12','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+														   
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute13}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute13') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute13 ? x.localAttribute13:  placeHolder}}
+								</td>
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow16" [query]="x.localAttribute13" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute13','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<!-- <td class="columnWidth110" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute14}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" maxlength="10" *ngIf="x.updatedValues.indexOf('localAttribute14') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute14 ? x.localAttribute14:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  ">
+									<app-autocompletecomponent [itemList]="editListrow4" [query]="x.localAttribute14" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute14','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf=" z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute15}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" maxlength="10" *ngIf="x.updatedValues.indexOf('localAttribute15') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute15 ? x.localAttribute15:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf=" z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  ">
+									<app-autocompletecomponent [itemList]="editListrow4" [query]="x.localAttribute15" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute15','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td> -->
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute16}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute16') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute16 ? x.localAttribute16:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow58" [query]="x.localAttribute16" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute16','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute17}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute17') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute17 ? x.localAttribute17:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow59" [query]="x.localAttribute17" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute17','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1 && z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute18}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute18') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute18 ? x.localAttribute18:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1 && z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow60" [query]="x.localAttribute18" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute18','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute19}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute19') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute19 ? x.localAttribute19:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow61" [query]="x.localAttribute19" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute19','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute20}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute20') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute20 ? x.localAttribute20:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow62" [query]="x.localAttribute20" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute20','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute21}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute21') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute21 ? x.localAttribute21:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow63" [query]="x.localAttribute21" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute21','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute22}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute22') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute22 ? x.localAttribute22:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow64" [query]="x.localAttribute22" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute22','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute23}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute23') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute23 ? x.localAttribute23:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow65" [query]="x.localAttribute23" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute23','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute24}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute24') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute24 ? x.localAttribute24:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow66" [query]="x.localAttribute24" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute24','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute25}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute25') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute25 ? x.localAttribute25:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow67" [query]="x.localAttribute25" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute25','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute26}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute26') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute26 ? x.localAttribute26:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow68" [query]="x.localAttribute26" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute26','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute27}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute27') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute27 ? x.localAttribute27:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow69" [query]="x.localAttribute27" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute27','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute28}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute28') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute28 ? x.localAttribute28:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow70" [query]="x.localAttribute28" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute28','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute29}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute29') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute29 ? x.localAttribute29:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 && x.exception===true ">
+									<app-autocompletecomponent [lastTenRows]=" tableData.length >= 10 && i > tableData.length - 10 ? true : false"  [maxLengthInput]="50" [itemList]="editListrow71" [query]="x.localAttribute29" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute29','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="columnWidth110" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1 &&  z != selectedChildRow && ExpandChildArray.indexOf(item.id) > -1 " title={{x.localAttribute30}} [ngClass]="(x.exception===false)?'':'exceptioncolor'">																
+									<i type="text" *ngIf="x.updatedValues.indexOf('localAttribute30') > -1" class="glyphicon glyphicon-triangle-right highlight"></i> {{x.localAttribute30 ? x.localAttribute30:  placeHolder}}
+								</td>								
+								<td class="columnWidth110 overflowUnset" *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1 &&  z === selectedChildRow && ExpandChildArray.indexOf(item.id) > -1  && x.exception===true">
+									<app-autocompletecomponent [maxLengthInput]="50" [itemList]="editListrow72" [query]="x.localAttribute30" (valueSelected)="Update_child_Edit_DropDown(x.id,'localAttribute30','child',$event)" [lastTenRows]="(tableData.length >= 10) && (i >= (tableData.length - 10)) ? true : false"></app-autocompletecomponent>															
+								</td>
+								
+								<td class="column36" [ngClass]="(x.exception===false)?'':'exceptioncolor'" *ngIf="ExpandChildArray.indexOf(item.id) > -1 " align="right">{{x.yago}}</td>
+								<td class="column37" [ngClass]="(x.exception===false)?'':'exceptioncolor'" *ngIf="ExpandChildArray.indexOf(item.id) > -1" align="right">{{x.yagosales}}</td>
+								<td class="column38" [ngClass]="(x.exception===false)?'':'exceptioncolor'" *ngIf="ExpandChildArray.indexOf(item.id) > -1 " align="right">{{x.currentyear}}</td>
+								<td class="column39" [ngClass]="(x.exception===false)?'':'exceptioncolor'" *ngIf="ExpandChildArray.indexOf(item.id) > -1 " align="right">{{x.totalsales}}</td>
+								
+                              <!--  <td class="column14" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.sub_category}}</td>
+								<td class="column15" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.brand}}</td>
+								<td class="column16" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.flavor}}</td>
+								<td class="column17" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.unit_size}}</td>
+								<td class="column18" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.retailpack_quantity}}</td>
+								<td class="column19" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.package_material}}</td>
+								<td class="column20" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.supplier}}</td>
+								<td class="column21" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.ic_fc}}</td>
+								<td class="column22" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.calorie_content}}</td>
+								<td class="column23" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.unitcase_conv}}</td>
+								<td class="column24" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.ltr}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute9}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute10}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute11}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute12}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute13}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute14}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute15}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute16}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute17}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute18}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute19}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute20}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute21}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute22}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute23}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute24}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute25}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute26}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute27}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute28}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute29}}</td>
+								<td class="columnWidth110" *ngIf="ExpandChildArray.indexOf(item.id) > -1" [ngClass]="(x.exception===false)?'':'exceptioncolor'">{{x.localAttribute30}}</td>
+								<td class="column36" *ngIf="ExpandChildArray.indexOf(item.id) > -1" align="right">{{x.yago}}</td>
+								<td class="column37" *ngIf="ExpandChildArray.indexOf(item.id) > -1" align="right">{{x.yagosales}}</td>
+								<td class="column38" *ngIf="ExpandChildArray.indexOf(item.id) > -1" align="right">{{x.currentyear}}</td>
+								<td class="column39" *ngIf="ExpandChildArray.indexOf(item.id) > -1" align="right">{{x.totalsales}}</td> -->
+							</tr>
+						</ng-template>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+<!---- Table Code Ends ---->
+   </div>
+<!----Search Result Display Ends ----->
+</div>
+<!---- Pop Up for Paste Button Begins ---->
+<div class="modal fade" id="myModal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body font12">
+				<table class="ddBtn bor1" style="width: 100%;">
+					<tbody>
+						<tr height="30px">
+							<td colspan="4" class="lightgreyGradiant vendorTableTitle"><b>Select
+									Fields To Paste</b></td>
+						</tr>
+						<tr>
+							<td colspan="4" style="vertical-align: top;">
+								<table class="table table-fixed bluesubheader">
+									<tbody>
+										<tr>
+											<td class="greyBG" colspan="2">
+												<div class="pull-left mR10 vendorSubHeaderTxt">
+													<input type="checkbox"  [checked] ="selectallcheck"
+														(change)="selectALL_Checkbox('pasteSelect',$event)" value=""><b>&nbsp;Select
+														All</b>
+												</div>
+												<div  class="pull-left mL10 vendorSubHeaderTxt">
+													<input type="checkbox" value="" *ngIf="localcheckboxPresent === true" (change)="localALL_Checkbox('pasteLocal',$event)" [checked] ="localallcheck" class="pull-left;"><b>Local values</b>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('category',$event)" id="pasteSelectedID_2" [checked] ="isSelected" value="">
+												</div><span>&nbsp;Category</span>
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('sub_category',$event)" id="pasteSelectedID_3" [checked] ="isSelected" value="">
+												</div>&nbsp;Sub-Category
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('brand',$event)" id="pasteSelectedID_1" [checked] ="isSelected" value="">
+												</div>&nbsp;Brand
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" [checked] ="isSelected" id="pasteSelectedID_10" (change)="update_paste_SelAttrList('flavor',$event)" value="">
+												</div>&nbsp;Flavor
+											</td>
+											
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('unit_size',$event)" id="pasteSelectedID_4" [checked] ="isSelected" value="">
+												</div>&nbsp;Unit Size
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('retailpack_quantity',$event)" id="pasteSelectedID_5" [checked] ="isSelected" value="">
+												</div>&nbsp;Retail Pack Qty
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('package_material',$event)" id="pasteSelectedID_6" [checked] ="isSelected" value="">
+												</div>&nbsp;Package Material
+											</td>											
+											<td>
+												<div class="padT2 pull-left">
+													<input type="checkbox" (change)="update_paste_SelAttrList('supplier',$event)" id="pasteSelectedID_7" [checked] ="isSelected" value="">
+												</div>&nbsp;Supplier
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('ic_fc',$event)" id="pasteSelectedID_8" [checked] ="isSelected" value="">
+												</div>&nbsp;IC/FC
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+													<input type="checkbox" (change)="update_paste_SelAttrList('calorie_content',$event)" id="pasteSelectedID_9" [checked] ="isSelected" value="">
+												</div>&nbsp;Calorie Content
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute9',$event)" id="pasteSelectedID_11" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 9
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute10',$event)" id="pasteSelectedID_12" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 10
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute11',$event)" id="pasteSelectedID_13" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 11
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute12',$event)" id="pasteSelectedID_14" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 12
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute13',$event)" id="pasteSelectedID_15" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 13
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute16',$event)" id="pasteSelectedID_16" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 16
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute17',$event)" id="pasteSelectedID_17" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 17
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute18',$event)"  id="pasteSelectedID_18" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 18
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute19',$event)" id="pasteSelectedID_19" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 19
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute20',$event)" id="pasteSelectedID_20" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 20
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1"> 
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute21',$event)" id="pasteSelectedID_21" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 21
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute22',$event)" id="pasteSelectedID_22" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 22
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute23',$event)"id="pasteSelectedID_23"  [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 23
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute24',$event)" id="pasteSelectedID_24" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 24
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute25',$event)" id="pasteSelectedID_25" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 25
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute26',$event)" id="pasteSelectedID_26" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 26
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute27',$event)" id="pasteSelectedID_27" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 27
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute28',$event)" id="pasteSelectedID_28" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 28
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute29',$event)" id="pasteSelectedID_29" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 29
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_paste_SelAttrList('localAttribute30',$event)" id="pasteSelectedID_30" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 30
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info" data-toggle="modal" (click)="popupCancel()" data-target="#myModal">Cancel</button>
+				<span  data-dismiss="modal">
+					<button type="button" class="btn btn-warning" [disabled]="PastePopUpDisable()" (click)="paste_functionality()">Paste</button>			
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Pop Up for Paste Button Ends-->
+<!-- Pop Up for Paste All Button Begins-->
+<div class="modal fade" id="pasteALL" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body font12">
+				<table class="ddBtn bor1" style="width: 100%;">
+					<tbody>
+						<tr height="30px">
+							<td colspan="4" class="lightgreyGradiant vendorTableTitle"><b>Select Fields To Paste ALL</b></td>
+						</tr>
+						<tr>
+							<td colspan="4" style="vertical-align: top;">
+								<table class="table table-fixed bluesubheader">
+									<tbody>
+										<tr>
+											<td class="greyBG" colspan="2">
+												<div class="pull-left mR10 vendorSubHeaderTxt">
+													<input type="checkbox"  [checked] ="selectallcheck" (change)="selectALL_Checkbox('pasteAllSelect',$event)" value=""><b>&nbsp;Select All</b>
+												</div>
+												<div  class="pull-left mL10 vendorSubHeaderTxt">
+													<input *ngIf="localcheckboxPresent === true" type="checkbox"  [checked] ="localallcheck" (change)="localALL_Checkbox('pasteAllLocal',$event)" value="" class="pull-left;"><b>Local values</b>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('category',$event)" id="pasteallSelectedID_2" [checked] ="isSelected" value="">
+												</div>&nbsp;Category
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('sub_category',$event)" id="pasteallSelectedID_3" [checked] ="isSelected" value="">
+												</div>&nbsp;Sub-Category
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('brand',$event)" id="pasteallSelectedID_1" [checked] ="isSelected" value="">
+												</div>&nbsp;Brand
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" [checked] ="isSelected" id="pasteallSelectedID_10" (change)="update_pasteall_SelAttrList('flavor',$event)" value="">
+												</div>&nbsp;Flavor
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('unit_size',$event)" id="pasteallSelectedID_4" [checked] ="isSelected" value="">
+												</div>&nbsp;Unit Size
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('retailpack_quantity',$event)" id="pasteallSelectedID_5" [checked] ="isSelected" value="">
+												</div>&nbsp;Retail Pack Qty
+											</td>											
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('package_material',$event)" id="pasteallSelectedID_6" [checked] ="isSelected" value="">
+												</div>&nbsp;Package Material
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+													<input type="checkbox" (change)="update_pasteall_SelAttrList('supplier',$event)" id="pasteallSelectedID_7" [checked] ="isSelected" value="">
+												</div>&nbsp;Supplier
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('ic_fc',$event)" id="pasteallSelectedID_8" [checked] ="isSelected" value="">
+												</div>&nbsp;IC/FC
+											</td>
+											<td>
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('calorie_content',$event)" id="pasteallSelectedID_9" [checked] ="isSelected" value="">
+												</div>&nbsp;Calorie Content
+											</td>
+											
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute9',$event)" id="pasteallSelectedID_11" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 9
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute10',$event)" id="pasteallSelectedID_12" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 10
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute11',$event)" id="pasteallSelectedID_13" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 11
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute12',$event)" id="pasteallSelectedID_14" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 12
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute13',$event)" id="pasteallSelectedID_15" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 13
+											</td>
+											
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute16',$event)" id="pasteallSelectedID_16" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 16
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute17',$event)" id="pasteallSelectedID_17" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 17
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute18',$event)" id="pasteallSelectedID_18" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 18
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute19',$event)" id="pasteallSelectedID_19" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 19
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute20',$event)" id="pasteallSelectedID_20" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 20
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute21',$event)" id="pasteallSelectedID_21" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 21
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute22',$event)" id="pasteallSelectedID_22" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 22
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute23',$event)" id="pasteallSelectedID_23" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 23
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute24',$event)" id="pasteallSelectedID_24" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 24
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute25',$event)" id="pasteallSelectedID_25" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 25
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute26',$event)" id="pasteallSelectedID_26" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 26
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute27',$event)" id="pasteallSelectedID_27" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 27
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute28',$event)" id="pasteallSelectedID_28" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 28
+											</td>
+										</tr>
+										<tr>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute29',$event)" id="pasteallSelectedID_29" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 29
+											</td>
+											<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1">
+												<div class="padT2 pull-left">
+												<input type="checkbox" (change)="update_pasteall_SelAttrList('localAttribute30',$event)" id="pasteallSelectedID_30" [checked] ="isLocalSelected" [checked] ="isSelected" value="">
+												</div>&nbsp;Product Local Attribute 30
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-info" data-toggle="modal" (click)="popupCancel()" data-target="#pasteALL">Cancel</button>
+				<span  data-dismiss="modal">
+					<button type="button" class="btn btn-warning" [disabled]="PasteAllPopUpDisable()" (click)="pasteall_functionality()" data-dismiss="modal">Paste All</button>
+				</span>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Pop Up for Paste All Button Ends-->
+<!-- Pop Up for Cancel Button Begins-->
+<div class="modal fade content" id="cancel" role="dialog">
+	<div class="modal-dialog" style="padding-right: 104px;">
+		<div class="modal-content">
+			<div class="modal-body font12 cancelbody">
+			<b>Press OK to cancel changes or Press CANCEL to stay on the current page.</b>
+			</div>
+			<div class="modal-footer cancelfooter">
+				<button type="button" class="btn btn-info" data-toggle="modal" (click)="cancel_data()" data-target="#cancel">OK</button>
+				<button type="button" class="btn btn-info" data-dismiss="modal">Cancel</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Pop Up for Cancel Button Ends-->
+<!-- Pop Up for Save Button Begins-->
+<div class="modal fade savecontent" id="save" role="dialog">
+	<div class="modal-dialog" style="padding-right: 244px;">
+		<div class="modal-content">
+			<div class="modal-body font12 savebody" id="resultMsg"><b>{{resultMessage}}</b></div>
+			<div class="modal-footer savefooter">
+				<button type="button" (click)="AfterSave_DefaultAttributes()" class="btn btn-info" data-toggle="modal" data-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Pop Up for Save Button Ends-->
+<!-- Pop Up for Mass Upload -->
+ <div class="modal fade" id="massupload" role="dialog" >
+   <div class="modal-dialog">
+     <div class="modal-content">
+        <div class="modal-body font12">
+          <table class="ddBtn bor1" style="width:100%;">
+			<tbody>
+				<tr height="30px">
+					<td colspan="4" class="lightgreyGradiant vendorTableTitle"><b>Select Attributes to be updated</b></td>
+				</tr>
+				<tr><td colspan="4" style="vertical-align:top;">
+						<table class="table table-fixed bluesubheader">
+ 						  <tbody>
+   							<tr>
+ 								<td class="greyBG" colspan="2">
+								   <div class="pull-left mR10 vendorSubHeaderTxt"><input type="checkbox"  [checked] ="selectallcheck" (change)="selectALL_Checkbox('updateSelect',$event)"  value=""><b>&nbsp;Select All</b></div>
+								   <div  class="pull-left mL10 vendorSubHeaderTxt"><input *ngIf="localcheckboxPresent === true" type="checkbox"  [checked] ="localallcheck" (change)="localALL_Checkbox('updateLocal',$event)" value="" class="pull-left;"><b>Local values</b></div> 
+								</td>
+  							 </tr>
+						      <tr>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('category',$event)" id="MassUploadSelectedID_2"  [checked] = "isLocalSelected" value=""></div>&nbsp;Category </td>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('sub_category',$event)" id="MassUploadSelectedID_3" [checked] = "isLocalSelected" value=""></div>&nbsp;Sub-Category</td>
+						      </tr>
+						      <tr>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('brand',$event)" id="MassUploadSelectedID_1" [checked] = "isLocalSelected" value=""></div>&nbsp;Brand</td>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('flavor',$event)" id="MassUploadSelectedID_10" [checked] = "isLocalSelected" value=""></div>&nbsp;Flavor</td> 
+						      </tr>
+						       <tr>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('unit_size',$event)"  id="MassUploadSelectedID_4" [checked] = "isLocalSelected" value=""></div>&nbsp;Unit Size </td>									
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('retailpack_quantity',$event)" id="MassUploadSelectedID_5" [checked] = "isLocalSelected" value=""></div>&nbsp;Retail Pack Qty</td>
+						      </tr>
+						       <tr>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('package_material',$event)"  id="MassUploadSelectedID_6" [checked] = "isLocalSelected" value=""></div>&nbsp;Package Material </td>									
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('supplier',$event)" id="MassUploadSelectedID_7" [checked] = "isLocalSelected" value=""></div>&nbsp;Supplier</td>
+						      </tr>
+						       <tr>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('ic_fc',$event)"  id="MassUploadSelectedID_8" [checked] ="isLocalSelected" value=""></div>&nbsp;IC/FC </td>
+								<td><div class="padT2 pull-left"><input type="checkbox"  (change)="massUpload_SetAttributes('calorie_content',$event)" id="MassUploadSelectedID_9" [checked] = "isLocalSelected" value=""></div>&nbsp;Calorie Content</td>
+						      </tr>      
+						       <tr>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 9') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute9',$event)" id="MassUploadSelectedID_11" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 9</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 10') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute10',$event)" id="MassUploadSelectedID_12" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 10</td>
+								</tr>
+							  <tr>
+							  <tr>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 11') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute11',$event)" id="MassUploadSelectedID_13" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 11</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 12') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute12',$event)" id="MassUploadSelectedID_14" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 12</td>
+								</tr>
+							  <tr>      
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 13') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute13',$event)" id="MassUploadSelectedID_15" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 13</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 16') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute16',$event)" id="MassUploadSelectedID_16" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 16</td>      
+								</tr>
+							  <tr>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 17') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute17',$event)" id="MassUploadSelectedID_17" [checked] = "isLocalSelected" value=""></div>&nbsp;Local Attribute 17</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 18') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute18',$event)" id="MassUploadSelectedID_18" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 18</td>     
+								</tr>
+							  <tr>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 19') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute19',$event)" id="MassUploadSelectedID_19" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 19</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 20') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute20',$event)" id="MassUploadSelectedID_20" [checked] = "isLocalSelected"   value=""></div>&nbsp;Local Attribute 20</td>      
+								 </tr>
+							  <tr>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 21') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute21',$event)" id="MassUploadSelectedID_21" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 21</td>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 22') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute22',$event)" id="MassUploadSelectedID_22" [checked] = "isLocalSelected"   value=""></div>&nbsp;Local Attribute 22</td>      
+								</tr>
+							  <tr>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 23') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute23',$event)" id="MassUploadSelectedID_23" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 23</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 24') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute24',$event)" id="MassUploadSelectedID_24" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 24</td>    
+								</tr>
+							  <tr>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 25') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute25',$event)" id="MassUploadSelectedID_25" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 25</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 26') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute26',$event)" id="MassUploadSelectedID_26" [checked] = "isLocalSelected" value=""></div>&nbsp;Local Attribute 26</td>		  
+								  </tr>
+							  <tr>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 27') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute27',$event)" id="MassUploadSelectedID_27" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 27</td>		
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 28') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute28',$event)" id="MassUploadSelectedID_28" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 28</td>     
+								</tr>		
+								<tr>
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 29') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute29',$event)" id="MassUploadSelectedID_29" [checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 29</td>		 
+								<td *ngIf="UpcLocalAttributeData.indexOf('Product Local Attribute 30') !== -1"><div class="padT2 pull-left"><input type="checkbox" (change)="massUpload_SetAttributes('localAttribute30',$event)" id="MassUploadSelectedID_30"[checked] = "isLocalSelected"  value=""></div>&nbsp;Local Attribute 30</td>
+						      </tr>			
+   						</tbody>
+					</table>
+				</td></tr>			
+			</tbody>
+		</table>
+   	 </div>
+	   <div class="modal-footer">
+	  	 <button type="button" class="btn btn-info" data-toggle="modal" (click)="popupUpdateCancel()" data-target="#massupload">CANCEL</button>
+		   <span  data-dismiss="modal">
+			<button type="button" class="btn btn-warning" (change)="isSelected = !isSelected" [disabled]="MassUploadPopUpDisable()" (click)="massUpload_functionality()" data-dismiss="modal">UPDATE</button>
+		   </span>
+		</div>
+	</div>
+  </div>
+</div>
+<!-- Pop Up for Mass Upload Incorrect Format Error Message Begins-->
+<div class="modal fade savecontent" id="uploaderror" role="dialog">
+	<div class="modal-dialog" style="padding-right: 110px;">
+		<div class="modal-content">						
+			<div colspan="4" class="lightgreyGradiant vendorTableTitle massupload"><b>Error Message</b></div>						
+			<div class="modal-body font12 uploadbody" id="uploaderror">The file <b>{{filename}}</b> has incorrect format.</div>
+			<div class="modal-footer cancelfooter">
+				<button type="button" class="btn btn-info" (click)="uploadCancel()" data-toggle="modal" data-dismiss="modal">Close</button>
+			</div>		 	
+		</div>
+	</div>
+</div>
+<!-- Pop Up for Mass Upload Incorrect Format Error Message Ends-->
+<!-- Pop Up for Mass Upload Partial Success Notification Begins-->
+<div class="modal fade savecontent" id="partialnotify" role="dialog">
+	<div class="modal-dialog popupdialog" style="padding-right: 110px;">
+		<div class="modal-content">	
+		   <div *ngIf="uploadResponse.failedRowsCount > 0"> 						
+			<div colspan="4" class="lightgreyGradiant vendorTableTitle massupload"><b>Notification Message</b></div>						
+			<div class="modal-body font12 uploadbody" id="partialnotify"><b>{{ uploadResponse.successCount}}</b> UPCs have been updated successfully.<br> 
+				<b>{{ uploadResponse.failedRowsCount }}</b> UPCs have been ignored: <br><br>				
+				
+				<div class="modal-content">							
+					<div colspan="4" class="uploadnotify"><b>The following item(s) contain incorrect value(s):</b></div>						
+					<div class="modal-body subpopupbody font12" style="padding: 2px;">			
+						<table style="width:100%">
+						  <tr class="uploadtable uploadtr">
+						    <th style="padding-left: 85px;">Row</th>
+						    <th style="padding-left: 85px;">Column Name</th> 						   
+						  </tr>
+						 <ng-template let-carsErrors ngFor [ngForOf]="ignoreList" > 
+						  <tr class="uploadtable" >
+						    <td style="padding-left: 85px;white-space: nowrap;">{{carsErrors.rowNumbre}}</td>
+						    <td style="padding-left: 85px;white-space: nowrap;">{{carsErrors.columNames}}</td> 						    
+						  </tr>	
+						 </ng-template> 
+						  <tr *ngIf="errorinValue">
+            				  <td colspan="4" align="center"><b>No Data</b></td>
+           				  </tr>				 
+						</table>					
+					</div>
+					</div>
+					<br>
+					
+					<div class="modal-content">
+					<div colspan="4" class="uploadnotify"><b>The following item(s) do(es) not exist in DB:</b></div>						
+					<div class="modal-body subpopupbody font12" style="padding: 2px;">			
+						<table style="width:100%;border-collapse: collapse;">
+						  <tr class="uploadtable uploadtr">   
+						    <th style="padding-left: 66px;">Ctry</th>
+						    <th style="padding-right:13px;;">Retailer</th>
+						    <th style="padding-left: 39px;">UPC Number</th>	
+						    <th style="padding-left: 40px;">Item Nbr</th> 
+						    					   
+						  </tr>
+						  <ng-template let-carsErrors ngFor [ngForOf]="successList" > 
+						 <tr class="uploadtable">
+						    <td style="padding-left: 66px;">{{carsErrors.ctry}}</td>
+						    <td style="padding-right:13px;">{{carsErrors.retailerNmbrTxt}}</td>
+						    <td style="padding-left: 39px;">{{carsErrors.upc}}</td> 
+						    <td style="padding-left: 40px;">{{carsErrors.itemNbr}}</td> 
+						  </tr>	
+						 </ng-template>			 
+                          <tr *ngIf="errorinDB">
+            				  <td colspan="4" align="center"><b>No Data</b></td>
+           				  </tr>
+						</table>						
+					 </div>
+					</div>
+					<br>
+					</div>
+				</div>
+				<div *ngIf="uploadResponse.failedRowsCount===0">
+				<div colspan="4" class="lightgreyGradiant vendorTableTitle massupload"><b>Notification Message</b></div>						
+					<div class="modal-body font12 uploadbody" id="partialnotify"><b>{{ uploadResponse.successCount}}</b> UPCs have been updated successfully.<br> 
+						<b>{{ uploadResponse.failedRowsCount }}</b> UPCs have been ignored. 	
+					</div>
+				</div>
+			<div class="modal-footer cancelfooter">
+				<button type="button" class="btn btn-info" data-toggle="modal" (click)="updating_MassUploadData()" data-dismiss="modal">Close</button>
+			</div>		 	
+		</div>
+	</div>
+</div>
+<!-- Pop Up for Mass Upload Partial Success Notification Ends-->
+<!-- Pop Up for Exception Message Begins-->
+<div class="modal fade savecontent" id="exception" role="dialog">
+	<div class="modal-dialog" style="padding-right: 110px;">
+		<div class="modal-content">						
+			<div colspan="4" class="lightgreyGradiant vendorTableTitle massupload"><b>Exception Message</b></div>						
+			<div class="modal-body font12 uploadbody" id="exception"><b>Application encountered an error. Please try again.</b></div>
+			<div class="modal-footer cancelfooter">
+				<button type="button" class="btn btn-info" data-toggle="modal" data-dismiss="modal">Close</button>
+			</div>		 	
+		</div>
+	</div>
+</div>
+<!-- Pop Up for Exception Message Ends-->
